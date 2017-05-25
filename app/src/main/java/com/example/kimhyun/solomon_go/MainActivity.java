@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-        Button btn_Main_Profile, btn_Main_Solostop, btn_Main_Nearsolomon, btn_Main_Bag, btn_Main_Setting;
+        Button btn_Main_Profile, btn_Main_Solostop, btn_Main_Nearsolomon, btn_Main_Bag, btn_Main_Setting, btn_Main_Login;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +20,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             btn_Main_Nearsolomon = (Button) findViewById(R.id.btn_Main_Nearsolomon);
             btn_Main_Bag = (Button) findViewById(R.id.btn_Main_Bag);
             btn_Main_Setting = (Button) findViewById(R.id.btn_Main_Setting);
+            btn_Main_Login = (Button) findViewById(R.id.btn_Main_Login);
 
             btn_Main_Profile.setOnClickListener(this);
             btn_Main_Solostop.setOnClickListener(this);
             btn_Main_Nearsolomon.setOnClickListener(this);
             btn_Main_Bag.setOnClickListener(this);
             btn_Main_Setting.setOnClickListener(this);
+            btn_Main_Login.setOnClickListener(this);
         }
 
         @Override
@@ -46,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case R.id.btn_Main_Bag:
                     intent = new Intent(MainActivity.this, BagActivity.class);
+                    break;
+                case R.id.btn_Main_Login:
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
                     break;
             }
             startActivity(intent);
