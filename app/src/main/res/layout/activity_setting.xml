@@ -16,7 +16,7 @@
         android:layout_marginTop="30dp">
 
         <CheckBox
-            android:id="@+id/chbox_disable"
+            android:id="@+id/ckbox_disable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -48,6 +48,18 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="공개할 정보"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
@@ -56,7 +68,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="19dp"
         android:orientation="vertical"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -64,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <CheckBox
-            android:id="@+id/ckbox_profile"
+            android:id="@+id/ckbox_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -83,13 +95,32 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="나이" />
-
         <CheckBox
-            android:id="@+id/ckbox_ability"
+            android:id="@+id/ckbox_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="학력" />
+            android:text="성별" />
+
+        <CheckBox
+            android:id="@+id/ckbox_hobby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="취미" />
+        <CheckBox
+            android:id="@+id/ckbox_job"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="직업" />
+        <CheckBox
+            android:id="@+id/ckbox_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="거주지" />
+
 
         <CheckBox
             android:id="@+id/ckbox_etc"
