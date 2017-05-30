@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.kimhyun.solomon_go.Login_RegisterActivity">
+    tools:context="com.example.kimhyun.solomon_go.LoginRegisterActivity">
 
     <ScrollView
         android:layout_width="match_parent"

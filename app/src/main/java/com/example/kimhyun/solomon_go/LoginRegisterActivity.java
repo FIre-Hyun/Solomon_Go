@@ -18,7 +18,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-public class Login_RegisterActivity extends AppCompatActivity {
+public class LoginRegisterActivity extends AppCompatActivity {
 
     Button btn_register;
 
@@ -29,7 +29,7 @@ public class Login_RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login__register);
+        setContentView(R.layout.activity_login_register);
 
         btn_register = (Button) findViewById(R.id.btn_register);
 
@@ -92,7 +92,7 @@ public class Login_RegisterActivity extends AppCompatActivity {
             protected void onPreExecute() {
                 super.onPreExecute();
 
-                loading = ProgressDialog.show(Login_RegisterActivity.this,
+                loading = ProgressDialog.show(LoginRegisterActivity.this,
                         "Please Wait", null, true, true);
             }
 
@@ -117,7 +117,7 @@ public class Login_RegisterActivity extends AppCompatActivity {
                     String home = (String)params[6];
                     String sex = (String) params[7];
 
-                    String link="http://jun123101.cafe24.com/send.php";
+                    String link="http://jun123101.cafe24.com/register.php";
                     String data  = URLEncoder.encode("id", "UTF-8") + "="
                             + URLEncoder.encode(id, "UTF-8");
                     data += "&" + URLEncoder.encode("password", "UTF-8") + "="
