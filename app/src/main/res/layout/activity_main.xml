@@ -105,12 +105,12 @@
         app:srcCompat="@drawable/square" />
 
     <Button
-        android:id="@+id/btn_Main_Login"
+        android:id="@+id/btn_Main_Logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="test_login"
+        android:text="test_logout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

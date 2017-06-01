@@ -1,6 +1,7 @@
 package com.example.kimhyun.solomon_go;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,7 +13,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ImageView btn_Main_Profile, btn_Main_Solostop, btn_Main_Nearsolomon, btn_Main_Bag, btn_Main_Setting, btn_Main_Recently;
 
-        Button btn_Main_Login;
+        Button btn_Main_Logout;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             btn_Main_Bag = (ImageView) findViewById(R.id.btn_Main_Bag);
             btn_Main_Setting = (ImageView) findViewById(R.id.btn_Main_Setting);
             btn_Main_Recently = (ImageView) findViewById(R.id.btn_Main_Recently);
-            btn_Main_Login = (Button) findViewById(R.id.btn_Main_Login);
+            btn_Main_Logout = (Button) findViewById(R.id.btn_Main_Logout);
 
             btn_Main_Profile.setOnClickListener(this);
             btn_Main_Solostop.setOnClickListener(this);
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             btn_Main_Bag.setOnClickListener(this);
             btn_Main_Setting.setOnClickListener(this);
             btn_Main_Recently.setOnClickListener(this);
-            btn_Main_Login.setOnClickListener(this);
+            btn_Main_Logout.setOnClickListener(this);
         }
 
 
@@ -61,7 +62,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.btn_Main_Recently:
                     intent = new Intent(MainActivity.this, RecentlyActivity.class);
                     break;
-                case R.id.btn_Main_Login:
+                case R.id.btn_Main_Logout:
+                    SharedPreferences auto_login = getSharedPreferences("setting", 0);
+                    SharedPreferences.Editor editor = auto_login.edit();
+
+                    editor.clear();
+                    editor.commit();
+
+
                     intent = new Intent(MainActivity.this, LoginActivity.class);
                     break;
             }

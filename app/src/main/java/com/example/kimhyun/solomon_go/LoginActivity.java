@@ -66,7 +66,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             et_password.setText(auto_login.getString("PW", ""));
             ckbox_autologin.setChecked(true);
 
-            
+
+            String id = et_id.getText().toString();
+            String password = et_password.getText().toString();
+
+            insertToDatabase(id, password);
+
+
+            GetData task = new GetData();
+            task.execute("http://jun123101.cafe24.com/login.php");
+            Log.d("Login", "onclick까지 먹음");
+
+
+
         }
 
 
@@ -239,6 +251,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                     startActivity(intent);
+
+                    finish();
 
                 }
 
