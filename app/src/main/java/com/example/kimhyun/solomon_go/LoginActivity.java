@@ -1,13 +1,16 @@
 package com.example.kimhyun.solomon_go;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,6 +39,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     ImageView btn_login, btn_register;
 
+    SharedPreferences auto_login;
+    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btn_login = (ImageView) findViewById(R.id.btn_login);
         btn_register = (ImageView) findViewById(R.id.btn_register);
+
+
+        auto_login = getSharedPreferences("setting", 0);
+        editor = auto_login.edit();
+
+
+        if(auto_login.getBoolean("Auto_Login_enabled", false)){
+            et_id.setText(auto_login.getString("ID", ""));
+            et_password.setText(auto_login.getString("PW", ""));
+            ckbox_autologin.setChecked(true);
+
+            
+        }
+
+
+
+        ckbox_autologin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO Auto-generated method stub
+                if(isChecked){
+
+                    String ID = et_id.getText().toString();
+                    String PW = et_password.getText().toString();
+
+                    editor.putString("ID", ID);
+                    editor.putString("PW", PW);
+                    editor.putBoolean("Auto_Login_enabled", true);
+                    editor.commit();
+                }else{
+//	        		editor.remove("ID");
+//	        		editor.remove("PW");
+//	        		editor.remove("Auto_Login_enabled");
+                    editor.clear();
+                    editor.commit();
+                }
+            }
+        });
 
 
     }
@@ -150,7 +194,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         task.execute(id, password);
     }
 
-
     private class GetData extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
 
@@ -181,7 +224,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.d("Login", "Json받았니??? ㅠㅠㅠㅠ ");
                 Toast.makeText(getApplicationContext(), name + "님 ㅎㅇ", Toast.LENGTH_SHORT).show();
 
-                if(name != null){
+                if(name != null){       //로그인이 성공한다면
+
+                    auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editer = auto_login.edit();
+
+                    editer.putString("id", et_id.getText().toString());
+                    editer.putString("password", et_password.getText().toString());
+                    editer.commit();
+
+
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -249,9 +301,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         }
 
-        protected void showList(){
-
-        }
     }
 
 }
