@@ -39,7 +39,7 @@ public class SolostopActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 Log.d(TAG, "GoogleMap is ready.");
-
+                float size = 3.6f;
                 map = googleMap;
 
 
@@ -48,6 +48,13 @@ public class SolostopActivity extends AppCompatActivity {
                         .radius(50)
                         .strokeColor(Color.parseColor("#884169e1"))
                         .fillColor(Color.parseColor("#5587cefa")));
+                map.addCircle(new CircleOptions()
+                        .center(new LatLng(37.4932593, 126.9793331))
+                        .radius(50)
+                        .strokeColor(Color.parseColor("#884169e1"))
+                        .fillColor(Color.parseColor("#5587cefa")));
+
+
 
             }
         });//end of fragment.getMapAsync
@@ -77,7 +84,7 @@ public class SolostopActivity extends AppCompatActivity {
 
         GPSListener gpsListener = new GPSListener();
 
-        long minTime = 10000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
+        long minTime = 3000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
         float minDistance = 0;//이동거리 지정 - 이동하면 무조건 갱신
 
         //위치정보는 위치 프로바이더(Location Provider)를 통해 얻는다
@@ -120,8 +127,11 @@ public class SolostopActivity extends AppCompatActivity {
                 String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
                 Log.i("GPSLocationService", msg);
 
+                LatLng nowPoint = new LatLng(latitude,longitude);
+                //map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,50));
                 // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
                 showCurrentLocation(latitude, longitude);//위치이동
+                //map.animateCamera(CameraUpdateFactory.zoomTo(16f));
                 count++;
             }
 
