@@ -87,6 +87,12 @@
                 android:layout_height="wrap_content"
                 android:text="자동로그인" />
 
+            <Button
+                android:id="@+id/btn_Main_Go"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="메인으로가기" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

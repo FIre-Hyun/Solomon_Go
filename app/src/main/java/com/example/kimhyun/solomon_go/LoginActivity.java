@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -34,7 +35,7 @@ import java.net.URLEncoder;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText et_id, et_password;
-
+    Button btn_Main_Go;
     CheckBox ckbox_autologin;
 
     ImageView btn_login, btn_register;
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btn_login = (ImageView) findViewById(R.id.btn_login);
         btn_register = (ImageView) findViewById(R.id.btn_register);
 
+        btn_Main_Go = (Button)findViewById(R.id.btn_Main_Go);
 
         auto_login = getSharedPreferences("setting", 0);
         editor = auto_login.edit();
@@ -105,12 +107,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
+        btn_Main_Go.setOnClickListener(this);
 
 
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.btn_login:
 
@@ -128,10 +132,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btn_register:
-                Intent intent = new Intent(getApplicationContext(), LoginRegisterActivity.class);
+                intent = new Intent(getApplicationContext(), LoginRegisterActivity.class);
                 startActivity(intent);
 
                 break;
+            case R.id.btn_Main_Go:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
         }
     }
 
