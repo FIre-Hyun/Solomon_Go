@@ -128,21 +128,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="생년월일..이거 어떻게하지" />
+                    android:text="생년월일" />
 
-                <EditText
-                    android:id="@+id/et_born"
+                <Spinner
+                    android:id="@+id/spinner_year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="" />
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:id="@+id/spinner_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:id="@+id/spinner_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
 
             </LinearLayout>
             <LinearLayout

@@ -17,4 +17,7 @@
 
 
     <string name="home_list">거주지</string>
+    <string name="birth_year">yyyy년</string>
+    <string name="birth_month">mm월</string>
+    <string name="birth_day">dd일</string>
 </resources>

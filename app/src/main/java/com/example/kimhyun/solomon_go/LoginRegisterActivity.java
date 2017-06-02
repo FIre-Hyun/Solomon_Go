@@ -30,7 +30,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
     EditText et_id, et_password, et_name, et_hobby, et_type, et_job;   //생년월일 하는거 어떻게하는지 몰라서 아직 안함
 
-    Spinner spin_home;
+    Spinner spin_home, spin_year, spin_month, spin_day;
 
     ImageView imageView_picture;
 
@@ -54,6 +54,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
         imageView_picture = (ImageView) findViewById(R.id.imageView_picture);
 
         spin_home= (Spinner) findViewById(R.id.spinner_home);
+        spin_year= (Spinner) findViewById(R.id.spinner_year);
+        spin_month= (Spinner) findViewById(R.id.spinner_month);
+        spin_day= (Spinner) findViewById(R.id.spinner_day);
 
         rb_man = (RadioButton) findViewById(R.id.rb_man);
         rb_girl = (RadioButton) findViewById(R.id.rb_girl);
@@ -65,12 +68,41 @@ public class LoginRegisterActivity extends AppCompatActivity {
         );
         spin_home.setAdapter(adapter);
 
+        ArrayAdapter adapter_year = ArrayAdapter.createFromResource(
+                this, R.array.birth_year, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        spin_home.setAdapter(adapter);
+
+        ArrayAdapter adapter_month = ArrayAdapter.createFromResource(
+                this, R.array.birth_month, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        spin_home.setAdapter(adapter);
+
+        ArrayAdapter adapter_day = ArrayAdapter.createFromResource(
+                this, R.array.birth_day, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        spin_home.setAdapter(adapter);
+        spin_year.setAdapter(adapter_year);
+        spin_month.setAdapter(adapter_month);
+        spin_day.setAdapter(adapter_day);
+
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(et_id != null && et_password != null && et_name != null && et_hobby != null &&
-                        et_type != null && et_job != null && spin_home != null && (rb_man.isChecked() || rb_girl.isChecked())) {
+                if(et_id.getText().toString() != null &&
+                        et_password.getText().toString() != null &&
+                        et_name.getText().toString() != null &&
+                        et_hobby.getText().toString() != null &&
+                        et_type.getText().toString() != null &&
+                        et_job.getText().toString() != null &&
+                        (rb_man.isChecked() || rb_girl.isChecked())) {
                     //모두 만족하면
 
 
@@ -129,6 +161,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     @Override
