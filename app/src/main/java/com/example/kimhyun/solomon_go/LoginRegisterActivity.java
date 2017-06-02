@@ -1,14 +1,20 @@
 package com.example.kimhyun.solomon_go;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -20,9 +26,13 @@ import java.net.URLEncoder;
 
 public class LoginRegisterActivity extends AppCompatActivity {
 
-    Button btn_register;
+    Button btn_register, btn_gallery;
 
-    EditText et_id, et_password, et_name, et_hobby, et_type, et_job, et_home;   //생년월일 하는거 어떻게하는지 몰라서 아직 안함
+    EditText et_id, et_password, et_name, et_hobby, et_type, et_job;   //생년월일 하는거 어떻게하는지 몰라서 아직 안함
+
+    Spinner spin_home;
+
+    ImageView imageView_picture;
 
     RadioButton rb_man, rb_girl;
 
@@ -32,6 +42,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_register);
 
         btn_register = (Button) findViewById(R.id.btn_register);
+        btn_gallery = (Button) findViewById(R.id.btn_gallery);
 
         et_id = (EditText) findViewById(R.id.et_id);
         et_password = (EditText) findViewById(R.id.et_password);
@@ -39,21 +50,27 @@ public class LoginRegisterActivity extends AppCompatActivity {
         et_hobby = (EditText) findViewById(R.id.et_hobby);
         et_type = (EditText) findViewById(R.id.et_type);
         et_job = (EditText) findViewById(R.id.et_job);
-        et_home = (EditText) findViewById(R.id.et_home);
+
+        imageView_picture = (ImageView) findViewById(R.id.imageView_picture);
+
+        spin_home= (Spinner) findViewById(R.id.spinner_home);
 
         rb_man = (RadioButton) findViewById(R.id.rb_man);
         rb_girl = (RadioButton) findViewById(R.id.rb_girl);
 
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(
+                this, R.array.home, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        spin_home.setAdapter(adapter);
+
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //id 중복이면 짤
-                //id, 비밀번호 입력 안햇으면 짤
-
-                //모두 만족하면 db에 insert 성공
 
                 if(et_id != null && et_password != null && et_name != null && et_hobby != null &&
-                        et_type != null && et_job != null && et_home != null && (rb_man.isChecked() || rb_girl.isChecked())) {
+                        et_type != null && et_job != null && spin_home != null && (rb_man.isChecked() || rb_girl.isChecked())) {
                     //모두 만족하면
 
 
@@ -63,7 +80,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     String hobby = et_hobby.getText().toString();
                     String type = et_type.getText().toString();
                     String job = et_job.getText().toString();
-                    String home = et_home.getText().toString();
+
+                    String home = spin_home.getSelectedItem().toString();
+
                     String sex;
                     if(rb_man.isChecked())
                         sex = "0";
@@ -77,10 +96,53 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
+                else{
+                    Toast.makeText(getApplicationContext(), "모두다 빠짐없이 입력해주세요!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                // Gallery 호출
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                // 잘라내기 셋팅
+                intent.putExtra("crop", "true");
+                intent.putExtra("aspectX", 0);
+                intent.putExtra("aspectY", 0);
+                intent.putExtra("outputX", 200);
+                intent.putExtra("outputY", 150);
+                try {
+                    intent.putExtra("return-data", true);
+                    startActivityForResult(Intent.createChooser(intent,
+                            "Complete action using"), 2);   // PICK FROM GALLERY
+                } catch (ActivityNotFoundException e) {
+                    // Do nothing for now
+                }
+
+
             }
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2) {
+            Bundle extras2 = data.getExtras();
+            if (extras2 != null) {
+                Bitmap photo = extras2.getParcelable("data");
+                imageView_picture.setImageBitmap(photo);
+            }
+        }
+
+    }
 
     private void insertToDatabase(String id, String password, String name, String hobby, String type, String job, String home, String sex){
 

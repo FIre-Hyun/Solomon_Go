@@ -217,20 +217,19 @@
                 android:orientation="horizontal">
 
 
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="거주지" />
 
-                <EditText
-                    android:id="@+id/et_home"
+                <Spinner
+                    android:id="@+id/spinner_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="" />
+                    android:layout_weight="1" />
+
 
             </LinearLayout>
 
@@ -240,23 +239,29 @@
                 android:orientation="horizontal">
 
 
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="사진등록어떻게하징" />
-
-                <EditText
-                    android:id="@+id/et_picture"
+                <Button
+                    android:id="@+id/btn_gallery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="" />
+                    android:text="갤러리에서 가져오기" />
 
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/common_google_signin_btn_icon_light" />
+
 
             <Button
                 android:id="@+id/btn_register"
@@ -265,6 +270,7 @@
                 android:layout_weight="1"
                 android:text="등록하기" />
         </LinearLayout>
+
     </ScrollView>
 
 
