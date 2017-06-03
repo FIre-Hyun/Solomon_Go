@@ -1,6 +1,5 @@
 package com.example.kimhyun.solomon_go;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,8 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -89,8 +86,6 @@ public class SolostopActivity extends AppCompatActivity {
 
         // 위치 정보 확인을 위해 정의한 메소드 호출
         startLocationService();
-        // 사용자 권한 확인 메서드 호출
-        checkDangerousPermissions();
     }//end of onCreate
 
     // 위치 정보 확인을 위해 정의한 메소드
@@ -103,7 +98,7 @@ public class SolostopActivity extends AppCompatActivity {
 
         GPSListener gpsListener = new GPSListener();
 
-        long minTime = 1000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
+        long minTime = 5000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
         float minDistance = 0;//이동거리 지정 - 이동하면 무조건 갱신
 
         //showCurrentLocation((double)latitude_position,(double)longitude_position);//위치이동
@@ -212,41 +207,6 @@ public class SolostopActivity extends AppCompatActivity {
 
 
     }// end of showCurrentLocation
-
-
-
-    /* 사용자 권한 확인 메서드
-       - import android.Manifest; 를 시킬 것
-     */
-    private void checkDangerousPermissions() {
-        String[] permissions = {//import android.Manifest;
-                Manifest.permission.ACCESS_FINE_LOCATION,   //GPS 이용권한
-                Manifest.permission.ACCESS_COARSE_LOCATION, //네트워크/Wifi 이용 권한
-                Manifest.permission.READ_EXTERNAL_STORAGE,  //읽기 권한
-                Manifest.permission.WRITE_EXTERNAL_STORAGE  //쓰기 권한
-        };
-
-        //권한을 가지고 있는지 체크
-        int permissionCheck = PackageManager.PERMISSION_GRANTED;
-        for (int i = 0; i < permissions.length; i++) {
-            permissionCheck = ContextCompat.checkSelfPermission(this, permissions[i]);
-            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                break;
-            }
-        }
-
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            //Toast.makeText(this, "권한 있음", Toast.LENGTH_LONG).show();
-        } else {
-            //Toast.makeText(this, "권한 없음", Toast.LENGTH_LONG).show();
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
-                //Toast.makeText(this, "권한 설명 필요함.", Toast.LENGTH_LONG).show();
-            } else {
-                ActivityCompat.requestPermissions(this, permissions, 1);
-            }
-        }
-    }//end of checkDangerousPermissions
 
     // 사용자의 권한 확인 후 사용자의 권한에 대한 응답 결과를 확인하는 콜백 메소드
     @Override
