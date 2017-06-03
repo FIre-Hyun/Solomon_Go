@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -171,6 +172,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
             Bundle extras2 = data.getExtras();
             if (extras2 != null) {
                 Bitmap photo = extras2.getParcelable("data");
+//                Log.d("register_data", data.getData().toString());
+//ㅋ                Log.d("register_extras2", extras2.toString());
+                Log.d("register_photo", photo.toString());
                 imageView_picture.setImageBitmap(photo);
             }
         }
