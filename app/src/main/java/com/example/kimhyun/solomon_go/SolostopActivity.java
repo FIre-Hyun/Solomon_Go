@@ -103,7 +103,7 @@ public class SolostopActivity extends AppCompatActivity {
 
         GPSListener gpsListener = new GPSListener();
 
-        long minTime = 1000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
+        long minTime = 5000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
         float minDistance = 0;//이동거리 지정 - 이동하면 무조건 갱신
 
         //showCurrentLocation((double)latitude_position,(double)longitude_position);//위치이동

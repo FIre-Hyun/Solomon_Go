@@ -1,10 +1,13 @@
 package com.example.kimhyun.solomon_go;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,6 +41,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             btn_Main_Logout.setOnClickListener(this);
         }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) { //종료방지
+        switch(keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                String buttonMessage = "어플을 종료하시겠습니까?";
+                String buttonYes = "Yes";
+                String buttonNo = "No";
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(buttonMessage)
+                        .setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                                moveTaskToBack(true);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(buttonNo, null)
+                        .show();
+        }
+        return true;
+    }
 
 
     @Override
