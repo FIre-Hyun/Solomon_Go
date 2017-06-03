@@ -3,6 +3,7 @@ package com.example.kimhyun.solomon_go;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
     RadioButton rb_man, rb_girl;
 
+    SharedPreferences auto_login;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +58,14 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
         imageView_picture = (ImageView) findViewById(R.id.imageView_picture);
 
-        spin_home= (Spinner) findViewById(R.id.spinner_home);
-        spin_year= (Spinner) findViewById(R.id.spinner_year);
-        spin_month= (Spinner) findViewById(R.id.spinner_month);
-        spin_day= (Spinner) findViewById(R.id.spinner_day);
+        spin_home = (Spinner) findViewById(R.id.spinner_home);
+        spin_year = (Spinner) findViewById(R.id.spinner_year);
+        spin_month = (Spinner) findViewById(R.id.spinner_month);
+        spin_day = (Spinner) findViewById(R.id.spinner_day);
 
         rb_man = (RadioButton) findViewById(R.id.rb_man);
         rb_girl = (RadioButton) findViewById(R.id.rb_girl);
+
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(
                 this, R.array.home, android.R.layout.simple_spinner_item);
@@ -93,17 +98,18 @@ public class LoginRegisterActivity extends AppCompatActivity {
         spin_month.setAdapter(adapter_month);
         spin_day.setAdapter(adapter_day);
 
+
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(et_id.getText().toString() != null &&
+                if (et_id.getText().toString() != null &&
                         et_password.getText().toString() != null &&
                         et_name.getText().toString() != null &&
                         et_hobby.getText().toString() != null &&
                         et_type.getText().toString() != null &&
                         et_job.getText().toString() != null &&
-                        (rb_man.isChecked() || rb_girl.isChecked())) {
+                        (rb_man.isChecked() || rb_girl.isChecked()) &&
+                        imageView_picture.getResources() != null ) {     // 사실 여기 널이아니라 기본값
                     //모두 만족하면
 
 
@@ -115,21 +121,22 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     String job = et_job.getText().toString();
 
                     String home = spin_home.getSelectedItem().toString();
-
                     String sex;
-                    if(rb_man.isChecked())
+
+                    String age = String.valueOf(spin_year.getSelectedItemPosition());
+
+                    if (rb_man.isChecked())
                         sex = "0";
                     else
                         sex = "1";
 
-                    insertToDatabase(id, password, name, hobby, type, job, home, sex);
+                    insertToDatabase(id, password, name, hobby, type, job, home, sex, age);
 
                     Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "모두다 빠짐없이 입력해주세요!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -168,20 +175,25 @@ public class LoginRegisterActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2) {
+        if (requestCode == 2) {     //pick from gallery
             Bundle extras2 = data.getExtras();
+
+//            Uri uri = data.getData();
+//            Log.d("11111", uri.toString());
+//            getimageNameToUri(uri);
+
             if (extras2 != null) {
                 Bitmap photo = extras2.getParcelable("data");
-//                Log.d("register_data", data.getData().toString());
-//ㅋ                Log.d("register_extras2", extras2.toString());
                 Log.d("register_photo", photo.toString());
                 imageView_picture.setImageBitmap(photo);
+
+                editor.putString("picture", photo.toString());
+
             }
         }
-
     }
 
-    private void insertToDatabase(String id, String password, String name, String hobby, String type, String job, String home, String sex){
+    private void insertToDatabase(String id, String password, String name, String hobby, String type, String job, String home, String sex, String  age) {
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
@@ -200,24 +212,25 @@ public class LoginRegisterActivity extends AppCompatActivity {
                 super.onPostExecute(s);
 
                 loading.dismiss();
-                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
 
             @Override
             protected String doInBackground(String... params) {
 
-                try{
-                    String id = (String)params[0];
-                    String password = (String)params[1];
-                    String name = (String)params[2];
-                    String hobby = (String)params[3];
-                    String type = (String)params[4];
-                    String job = (String)params[5];
-                    String home = (String)params[6];
+                try {
+                    String id = (String) params[0];
+                    String password = (String) params[1];
+                    String name = (String) params[2];
+                    String hobby = (String) params[3];
+                    String type = (String) params[4];
+                    String job = (String) params[5];
+                    String home = (String) params[6];
                     String sex = (String) params[7];
+                    String age = (String) params[8];
 
-                    String link="http://jun123101.cafe24.com/register.php";
-                    String data  = URLEncoder.encode("id", "UTF-8") + "="
+                    String link = "http://jun123101.cafe24.com/register.php";
+                    String data = URLEncoder.encode("id", "UTF-8") + "="
                             + URLEncoder.encode(id, "UTF-8");
                     data += "&" + URLEncoder.encode("password", "UTF-8") + "="
                             + URLEncoder.encode(password, "UTF-8");
@@ -233,6 +246,8 @@ public class LoginRegisterActivity extends AppCompatActivity {
                             + URLEncoder.encode(home, "UTF-8");
                     data += "&" + URLEncoder.encode("sex", "UTF-8") + "="
                             + URLEncoder.encode(sex, "UTF-8");
+                    data += "&" + URLEncoder.encode("age", "UTF-8") + "="
+                            + URLEncoder.encode(age, "UTF-8");
 
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
@@ -241,7 +256,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     OutputStreamWriter wr =
                             new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write( data );
+                    wr.write(data);
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(
@@ -251,14 +266,12 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     String line = null;
 
                     // Read Server Response
-                    while((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                         break;
                     }
                     return sb.toString();
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                     return new String("Exception: " + e.getMessage());
                 }
@@ -267,6 +280,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
         }
 
         InsertData task = new InsertData();
-        task.execute(id, password, name, hobby, type, job, home, sex);
+        task.execute(id, password, name, hobby, type, job, home, sex, age);
     }
 }

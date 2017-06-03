@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,40 +19,54 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-        ImageView btn_Main_Profile, btn_Main_Solostop, btn_Main_Nearsolomon, btn_Main_Bag, btn_Main_Setting, btn_Main_Recently;
+    ImageView btn_Main_Profile, btn_Main_Solostop, btn_Main_Nearsolomon, btn_Main_Bag, btn_Main_Setting, btn_Main_Recently;
 
-        Button btn_Main_Logout;
+    Button btn_Main_Logout;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    String imgUrl = "http://jun123101.cafe24.com/picture/";
 
-            Log.d("111", "111");
-            btn_Main_Profile = (ImageView) findViewById(R.id.btn_Main_Profile);
-            btn_Main_Solostop = (ImageView) findViewById(R.id.btn_Main_Solostop);
-            btn_Main_Nearsolomon = (ImageView) findViewById(R.id.btn_Main_Nearsolomon);
-            btn_Main_Bag = (ImageView) findViewById(R.id.btn_Main_Bag);
-            btn_Main_Setting = (ImageView) findViewById(R.id.btn_Main_Setting);
-            btn_Main_Recently = (ImageView) findViewById(R.id.btn_Main_Recently);
-            btn_Main_Logout = (Button) findViewById(R.id.btn_Main_Logout);
+    picture task;
 
-            btn_Main_Profile.setOnClickListener(this);
-            btn_Main_Solostop.setOnClickListener(this);
-            btn_Main_Nearsolomon.setOnClickListener(this);
-            btn_Main_Bag.setOnClickListener(this);
-            btn_Main_Setting.setOnClickListener(this);
-            btn_Main_Recently.setOnClickListener(this);
-            btn_Main_Logout.setOnClickListener(this);
+    Bitmap bmImg;
 
-            checkDangerousPermissions();
-        }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btn_Main_Profile = (ImageView) findViewById(R.id.btn_Main_Profile);
+        btn_Main_Solostop = (ImageView) findViewById(R.id.btn_Main_Solostop);
+        btn_Main_Nearsolomon = (ImageView) findViewById(R.id.btn_Main_Nearsolomon);
+        btn_Main_Bag = (ImageView) findViewById(R.id.btn_Main_Bag);
+        btn_Main_Setting = (ImageView) findViewById(R.id.btn_Main_Setting);
+        btn_Main_Recently = (ImageView) findViewById(R.id.btn_Main_Recently);
+        btn_Main_Logout = (Button) findViewById(R.id.btn_Main_Logout);
+
+        btn_Main_Profile.setOnClickListener(this);
+        btn_Main_Solostop.setOnClickListener(this);
+        btn_Main_Nearsolomon.setOnClickListener(this);
+        btn_Main_Bag.setOnClickListener(this);
+        btn_Main_Setting.setOnClickListener(this);
+        btn_Main_Recently.setOnClickListener(this);
+        btn_Main_Logout.setOnClickListener(this);
+
+        checkDangerousPermissions();
+
+        task = new picture();
+        task.execute(imgUrl+"picture_" + "hyun" + ".png");    // 아이디 받아와서 아이디가 들어가면 돼
+
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) { //종료방지
-        switch(keyCode){
+        switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 String buttonMessage = "어플을 종료하시겠습니까?";
                 String buttonYes = "Yes";
@@ -103,40 +120,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }//end of checkDangerousPermissions
 
     @Override
-        public void onClick(View v) {
-            Intent intent = null;
-            switch (v.getId()){
-                case R.id.btn_Main_Profile:
-                    intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    break;
-                case R.id.btn_Main_Solostop:
-                    intent = new Intent(MainActivity.this, SolostopActivity.class);
-                    break;
-                case R.id.btn_Main_Setting:
-                    intent = new Intent(MainActivity.this, SettingActivity.class);
-                    break;
-                case R.id.btn_Main_Nearsolomon:
-                    intent = new Intent(MainActivity.this, NearsolomonActivity.class);
-                    break;
-                case R.id.btn_Main_Bag:
-                    intent = new Intent(MainActivity.this, BagActivity.class);
-                    break;
-                case R.id.btn_Main_Recently:
-                    intent = new Intent(MainActivity.this, DialogAcitivy.class);//여기서 이미지나 프로필내용을 보내주어야 한다
-                    //intent = new Intent(MainActivity.this, RecentlyActivity.class);
-                    break;
-                case R.id.btn_Main_Logout:
-                    SharedPreferences auto_login = getSharedPreferences("setting", 0);
-                    SharedPreferences.Editor editor = auto_login.edit();
+    public void onClick(View v) {
+        Intent intent = null;
+        switch (v.getId()) {
+            case R.id.btn_Main_Profile:
+                intent = new Intent(MainActivity.this, ProfileActivity.class);
+                break;
+            case R.id.btn_Main_Solostop:
+                intent = new Intent(MainActivity.this, SolostopActivity.class);
+                break;
+            case R.id.btn_Main_Setting:
+                intent = new Intent(MainActivity.this, SettingActivity.class);
+                break;
+            case R.id.btn_Main_Nearsolomon:
+                intent = new Intent(MainActivity.this, NearsolomonActivity.class);
+                break;
+            case R.id.btn_Main_Bag:
+                intent = new Intent(MainActivity.this, BagActivity.class);
+                break;
+            case R.id.btn_Main_Recently:
+                intent = new Intent(MainActivity.this, DialogAcitivy.class);//여기서 이미지나 프로필내용을 보내주어야 한다
+                //intent = new Intent(MainActivity.this, RecentlyActivity.class);
+                break;
+            case R.id.btn_Main_Logout:
+                SharedPreferences auto_login = getSharedPreferences("setting", 0);
+                SharedPreferences.Editor editor = auto_login.edit();
 
-                    editor.clear();
-                    editor.commit();
+                editor.clear();
+                editor.commit();
 
 
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                    break;
-            }
-            startActivity(intent);
-
+                intent = new Intent(MainActivity.this, LoginActivity.class);
+                break;
         }
+        startActivity(intent);
+
     }
+
+    private class picture extends AsyncTask<String, Integer, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            // TODO Auto-generated method stub
+            Log.d("Main", "back 들어옴");
+            try {
+                Log.d("Main", "try 들어옴");
+                URL myFileUrl = new URL(urls[0]);
+
+                Log.d("Main", "들어옴");
+                HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+                conn.setDoInput(true);
+                conn.connect();
+
+                InputStream is = conn.getInputStream();
+
+                bmImg = BitmapFactory.decodeStream(is);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bmImg;
+        }
+
+        protected void onPostExecute(Bitmap img) {
+            btn_Main_Profile.setImageBitmap(bmImg);
+        }
+
+    }
+}
