@@ -2,6 +2,7 @@ package com.example.kimhyun.solomon_go;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -12,26 +13,44 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class SolostopActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private GoogleMap map;
+
+    SharedPreferences save_position;
+    SharedPreferences.Editor editor_position;
+
     int count=0;
+    float latitude_position,longitude_position;
+    double d_latitude,d_longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solostop);
         SupportMapFragment fragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.map);
+
+        save_position = getSharedPreferences("position",0);
+        editor_position = save_position.edit();
+
+        latitude_position = save_position.getFloat("latitude",37.4512074f);
+        longitude_position = save_position.getFloat("longitude",127.1277899f);
+
+
+        //LatLng nowPoint = new LatLng((double)latitude_position,(double)longitude_position);
+        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,50));
+        // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
 
 
         //구글 맵 객체 참조
@@ -84,9 +103,10 @@ public class SolostopActivity extends AppCompatActivity {
 
         GPSListener gpsListener = new GPSListener();
 
-        long minTime = 3000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
+        long minTime = 1000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
         float minDistance = 0;//이동거리 지정 - 이동하면 무조건 갱신
 
+        //showCurrentLocation((double)latitude_position,(double)longitude_position);//위치이동
         //위치정보는 위치 프로바이더(Location Provider)를 통해 얻는다
         try {
             // GPS를 이용한 위치 요청
@@ -108,31 +128,47 @@ public class SolostopActivity extends AppCompatActivity {
             if (lastLocation != null) {
                 Double latitude = lastLocation.getLatitude();
                 Double longitude = lastLocation.getLongitude();
-                Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "
-                        + latitude + "\nLongitude:" + longitude, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "
+                //        + latitude + "\nLongitude:" + longitude, Toast.LENGTH_LONG).show();
+                LatLng nowPoint = new LatLng(latitude,longitude);
             }
+
         } catch(SecurityException ex) {
             ex.printStackTrace();
         }
-        Toast.makeText(getApplicationContext(), "위치 확인 시작함.", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "위치 확인 시작함.", Toast.LENGTH_SHORT).show();
     }//end of startLocationService()
 
     //위치 정보 확인을 위한 위치 리스너 정의
     private class GPSListener implements LocationListener {
         //위치 정보가 확인(수신)될 때마다 자동 호출되는 메소드
         public void onLocationChanged(Location location) {
+            map.clear();
             Double latitude = location.getLatitude();
             Double longitude = location.getLongitude();
+            latitude_position = (float)location.getLatitude();
+            longitude_position = (float)location.getLongitude();
             if(location.getAccuracy()<100||count==0){
                 String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
                 Log.i("GPSLocationService", msg);
 
+                latitude_position = (float)location.getLatitude();
+                editor_position.putFloat("latitude",latitude_position);
+                editor_position.putFloat("Longitude",longitude_position);
+
                 LatLng nowPoint = new LatLng(latitude,longitude);
-                //map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,50));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,17));
                 // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
                 showCurrentLocation(latitude, longitude);//위치이동
-                //map.animateCamera(CameraUpdateFactory.zoomTo(16f));
                 count++;
+                //editor.putString("ID", ID);
+
+                MarkerOptions optFirst = new MarkerOptions();
+                optFirst.position(nowPoint);// 위도 • 경도
+                optFirst.icon(BitmapDescriptorFactory.fromResource(
+                        R.mipmap.ic_launcher_round));
+
+                map.addMarker(optFirst).showInfoWindow();
             }
 
         }
@@ -164,8 +200,6 @@ public class SolostopActivity extends AppCompatActivity {
             @param curPoint
             @param level(배율)
          */
-
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint,15));
 
 
         /* 지도 유형 설정
@@ -202,12 +236,12 @@ public class SolostopActivity extends AppCompatActivity {
         }
 
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "권한 있음", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "권한 있음", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "권한 없음", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "권한 없음", Toast.LENGTH_LONG).show();
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
-                Toast.makeText(this, "권한 설명 필요함.", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "권한 설명 필요함.", Toast.LENGTH_LONG).show();
             } else {
                 ActivityCompat.requestPermissions(this, permissions, 1);
             }
@@ -221,12 +255,17 @@ public class SolostopActivity extends AppCompatActivity {
         if (requestCode == 1) {
             for (int i = 0; i < permissions.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, permissions[i] + " 권한이 승인됨.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, permissions[i] + " 권한이 승인됨.", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(this, permissions[i] + " 권한이 승인되지 않음.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, permissions[i] + " 권한이 승인되지 않음.", Toast.LENGTH_LONG).show();
                 }
             }
         }
+
     }//end of onRequestPermissionsResult
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }//end of MainActivity

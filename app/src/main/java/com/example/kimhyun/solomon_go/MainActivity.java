@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent = new Intent(MainActivity.this, BagActivity.class);
                     break;
                 case R.id.btn_Main_Recently:
-                    intent = new Intent(MainActivity.this, RecentlyActivity.class);
+                    intent = new Intent(MainActivity.this, DialogAcitivy.class);//여기서 이미지나 프로필내용을 보내주어야 한다
+                    //intent = new Intent(MainActivity.this, RecentlyActivity.class);
                     break;
                 case R.id.btn_Main_Logout:
                     SharedPreferences auto_login = getSharedPreferences("setting", 0);
