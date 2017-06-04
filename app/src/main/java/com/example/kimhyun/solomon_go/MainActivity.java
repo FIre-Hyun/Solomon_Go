@@ -1,6 +1,7 @@
 package com.example.kimhyun.solomon_go;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,11 +31,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btn_Main_Logout;
 
-    String imgUrl = "http://jun123101.cafe24.com/picture/";
+    String imgUrl = "http://jun123101.cafe24.com/picture/", id;
 
     picture task;
 
     Bitmap bmImg;
+
+    SharedPreferences sp_id;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkDangerousPermissions();
 
         task = new picture();
-        task.execute(imgUrl+"picture_" + "hyun" + ".png");    // 아이디 받아와서 아이디가 들어가면 돼
+        sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        editor = sp_id.edit();
+
+        id = sp_id.getString("ID","");
+
+        Log.d("prefer", id);
+        task.execute(imgUrl+"picture_" + id + ".png");    // 아이디 받아와서 아이디가 들어가면 돼
 
     }
 
@@ -143,13 +153,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //intent = new Intent(MainActivity.this, RecentlyActivity.class);
                 break;
             case R.id.btn_Main_Logout:
-                SharedPreferences auto_login = getSharedPreferences("setting", 0);
-                SharedPreferences.Editor editor = auto_login.edit();
 
                 editor.clear();
                 editor.commit();
-
-
+                
                 intent = new Intent(MainActivity.this, LoginActivity.class);
                 break;
         }

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -57,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btn_Main_Go = (Button)findViewById(R.id.btn_Main_Go);
 
-        auto_login = getSharedPreferences("setting", 0);
+        auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         editor = auto_login.edit();
 
 
@@ -78,29 +77,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
-
-        ckbox_autologin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO Auto-generated method stub
-                if(isChecked){
-
-                    String ID = et_id.getText().toString();
-                    String PW = et_password.getText().toString();
-
-                    editor.putString("ID", ID);
-                    editor.putString("PW", PW);
-                    editor.putBoolean("Auto_Login_enabled", true);
-                    editor.commit();
-                }else{
-//	        		editor.remove("ID");
-//	        		editor.remove("PW");
-//	        		editor.remove("Auto_Login_enabled");
-                    editor.clear();
-                    editor.commit();
-                }
-            }
-        });
         btn_Main_Go.setOnClickListener(this);
 
 
@@ -163,12 +139,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         Toast.makeText(getApplicationContext(), name + "님 안녕하세요", Toast.LENGTH_SHORT).show();
 
-                        auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
-                        SharedPreferences.Editor editer = auto_login.edit();
+                        String ID = et_id.getText().toString();
 
-                        editer.putString("id", et_id.getText().toString());
-                        editer.putString("password", et_password.getText().toString());
-                        editer.commit();
+                        if(ckbox_autologin.isChecked()){
+
+                            String PW = et_password.getText().toString();
+
+                            editor.putString("PW", PW);
+                            editor.putBoolean("Auto_Login_enabled", true);
+                        }else{
+                            editor.clear();
+                        }
+
+                        Log.d("로그인 pre", ID);
+                        editor.putString("ID", ID);
+                        editor.commit();
 
 
 
