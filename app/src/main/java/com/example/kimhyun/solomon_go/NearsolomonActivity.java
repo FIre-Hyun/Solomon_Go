@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class NearsolomonActivity extends AppCompatActivity {
-    private static String TAG = "phptest_MainActivity";
+    private static String TAG = "Nearsolomon";
 
     private static final String TAG_JSON = "near";
     private static final String TAG_ID = "id";
