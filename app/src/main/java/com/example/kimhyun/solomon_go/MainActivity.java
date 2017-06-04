@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 editor.clear();
                 editor.commit();
-                
+
                 intent = new Intent(MainActivity.this, LoginActivity.class);
                 break;
         }
