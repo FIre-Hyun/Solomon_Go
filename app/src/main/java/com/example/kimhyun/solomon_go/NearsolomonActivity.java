@@ -1,25 +1,29 @@
 package com.example.kimhyun.solomon_go;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ListAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class NearsolomonActivity extends AppCompatActivity {
     private static String TAG = "Nearsolomon";
@@ -29,10 +33,16 @@ public class NearsolomonActivity extends AppCompatActivity {
     private static final String TAG_NAME = "name";
     private static final String TAG_AGE = "age";
 
-    ArrayList<HashMap<String, String>> mArrayList;
-    ListView mlistView;
-    String mJsonString, imgUrl = "http://jun123101.cafe24.com/picture/";
+    NearMemberAdapter adapter;
 
+    ListView mlistView;
+    String mJsonString;
+
+    ImageView imageView;
+
+    Bitmap bmImg;
+
+    Drawable drawable;
 
 
     @Override
@@ -41,10 +51,12 @@ public class NearsolomonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nearsolomon);
 
         mlistView = (ListView) findViewById(R.id.listView_main_list);
-        mArrayList = new ArrayList<>();
+        imageView = (ImageView) findViewById(R.id.imageView3);
+        adapter = new NearMemberAdapter();
+
 
         GetData task = new GetData();
-        task.execute("http://jun123101.cafe24.com/near.php");
+        task.execute("http://jun123101.cafe24.com/");
     }
 
 
@@ -76,12 +88,13 @@ public class NearsolomonActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String serverURL = params[0];
+            String serverURL = params[0]+"near.php";
 
 
             try {
 
                 URL url = new URL(serverURL);
+
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
 
@@ -135,6 +148,8 @@ public class NearsolomonActivity extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject(mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
 
+            mlistView.setAdapter(adapter);
+
             for(int i=0;i<jsonArray.length();i++){
 
                 JSONObject item = jsonArray.getJSONObject(i);
@@ -142,27 +157,71 @@ public class NearsolomonActivity extends AppCompatActivity {
                 String id = item.getString(TAG_ID);
                 String name = item.getString(TAG_NAME);
                 String age = item.getString(TAG_AGE);
+//
+//                URL imageURL = new URL("http://jun123101.cafe24.com/picture/" + id + ".png");
+//
+//                HttpURLConnection conn = (HttpURLConnection) imageURL.openConnection();
+//                conn.setDoInput(true);
+//                conn.connect();
+//
+//                InputStream is = conn.getInputStream();
+//
+//                bmImg = BitmapFactory.decodeStream(is);
+//
+//                imageView.setImageBitmap(bmImg);
+                GetImage imagetask = new GetImage();
+                bmImg = imagetask.execute("http://jun123101.cafe24.com/picture/picture_" + id + ".png").get();
 
-                HashMap<String,String> hashMap = new HashMap<>();
+                drawable = new BitmapDrawable(getResources(), bmImg);
 
-                hashMap.put(TAG_ID, id);
-                hashMap.put(TAG_NAME, name);
-                hashMap.put(TAG_AGE, age);
+                if(drawable != null) {
 
-                mArrayList.add(hashMap);
+                    Log.d("drawable2", drawable.toString());
+                }
+                //drawable = getResources().getDrawable(R.drawable.cast_abc_scrubber_control_off_mtrl_alpha);
+
+                adapter.addItem(drawable, name, age) ;
+                Toast.makeText(getApplicationContext(), "aaa", Toast.LENGTH_SHORT).show();
+
             }
 
-            ListAdapter adapter = new SimpleAdapter(
-                    NearsolomonActivity.this, mArrayList, R.layout.item_list,
-                    new String[]{TAG_ID,TAG_NAME, TAG_AGE},
-                    new int[]{R.id.textView_list_id, R.id.textView_list_name, R.id.textView_list_age}
-            );
-
-            mlistView.setAdapter(adapter);
 
         } catch (JSONException e) {
 
             Log.d(TAG, "showResult : ", e);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private class GetImage extends AsyncTask<String, Integer, Bitmap> {
+
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            // TODO Auto-generated method stub
+            try {
+                Log.d("Main", "try 들어옴");
+                URL myFileUrl = new URL(urls[0]);
+
+                Log.d("Main", "들어옴");
+                HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+                conn.setDoInput(true);
+                conn.connect();
+
+                InputStream is = conn.getInputStream();
+
+                bmImg = BitmapFactory.decodeStream(is);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bmImg;
+        }
+
+        protected void onPostExecute(Bitmap img) {
         }
 
     }

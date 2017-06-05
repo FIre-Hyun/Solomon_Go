@@ -61,16 +61,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_Main_Recently.setOnClickListener(this);
         btn_Main_Logout.setOnClickListener(this);
 
+
+
         checkDangerousPermissions();
 
         task = new picture();
         sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         editor = sp_id.edit();
 
-        id = sp_id.getString("ID","");
+        id = sp_id.getString("ID", "");
 
         Log.d("prefer", id);
-        task.execute(imgUrl+"picture_" + id + ".png");    // 아이디 받아와서 아이디가 들어가면 돼
+        task.execute(imgUrl + "picture_" + id + ".png");    // 아이디 받아와서 아이디가 들어가면 돼
 
     }
 
