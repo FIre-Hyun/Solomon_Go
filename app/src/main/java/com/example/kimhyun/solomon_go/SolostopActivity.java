@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class SolostopActivity extends AppCompatActivity {
@@ -57,6 +59,19 @@ public class SolostopActivity extends AppCompatActivity {
                 Log.d(TAG, "GoogleMap is ready.");
                 map = googleMap;
 
+                map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        //Toast.makeText(getApplicationContext(), "마커 클릭 확인용 토스트", Toast.LENGTH_LONG).show();
+                    }
+                });
+                map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        Toast.makeText(getApplicationContext(), "마커 클릭 확인용 토스트", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                });
 
             }
         });//end of fragment.getMapAsync
@@ -165,6 +180,7 @@ public class SolostopActivity extends AppCompatActivity {
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(37.4515900, 127.1276563))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+
             ).showInfoWindow();
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(37.3986291, 127.1051303))

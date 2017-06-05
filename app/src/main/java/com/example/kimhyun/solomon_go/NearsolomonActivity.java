@@ -1,6 +1,7 @@
 package com.example.kimhyun.solomon_go;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -56,6 +59,14 @@ public class NearsolomonActivity extends AppCompatActivity {
 
         GetData task = new GetData();
         task.execute("http://jun123101.cafe24.com/");
+
+        mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), DialogAcitivy.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
