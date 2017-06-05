@@ -55,21 +55,7 @@ public class SolostopActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 Log.d(TAG, "GoogleMap is ready.");
-                float size = 3.6f;
                 map = googleMap;
-
-
-                map.addCircle(new CircleOptions()
-                        .center(new LatLng(37.4512074, 127.1277899))
-                        .radius(50)
-                        .strokeColor(Color.parseColor("#884169e1"))
-                        .fillColor(Color.parseColor("#5587cefa")));
-                map.addCircle(new CircleOptions()
-                        .center(new LatLng(37.4932593, 126.9793331))
-                        .radius(50)
-                        .strokeColor(Color.parseColor("#884169e1"))
-                        .fillColor(Color.parseColor("#5587cefa")));
-
 
 
             }
@@ -146,7 +132,7 @@ public class SolostopActivity extends AppCompatActivity {
             Double longitude = location.getLongitude();
             latitude_position = (float)location.getLatitude();
             longitude_position = (float)location.getLongitude();
-            if(location.getAccuracy()<100000||count==0){
+            if(location.getAccuracy()<1000||count==0){
                 map.clear();
                 String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
                 Log.i("GPSLocationService", msg);
@@ -175,6 +161,15 @@ public class SolostopActivity extends AppCompatActivity {
                         .strokeColor(Color.parseColor("#88FF4081"))
                         .fillColor(Color.parseColor("#55ec068d")));
             }
+
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4515900, 127.1276563))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.3986291, 127.1051303))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
         }
 
