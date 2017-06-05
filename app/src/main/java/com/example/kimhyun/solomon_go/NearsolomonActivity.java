@@ -51,7 +51,6 @@ public class NearsolomonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nearsolomon);
 
         mlistView = (ListView) findViewById(R.id.listView_main_list);
-        imageView = (ImageView) findViewById(R.id.imageView3);
         adapter = new NearMemberAdapter();
 
 

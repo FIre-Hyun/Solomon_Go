@@ -17,11 +17,4 @@
         android:padding="5dp"
         android:id="@+id/listView_main_list" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6"
-        app:srcCompat="@drawable/cast_abc_scrubber_control_to_pressed_mtrl_000" />
-
 </LinearLayout>
