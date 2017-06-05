@@ -55,21 +55,7 @@ public class SolostopActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 Log.d(TAG, "GoogleMap is ready.");
-                float size = 3.6f;
                 map = googleMap;
-
-
-                map.addCircle(new CircleOptions()
-                        .center(new LatLng(37.4512074, 127.1277899))
-                        .radius(50)
-                        .strokeColor(Color.parseColor("#884169e1"))
-                        .fillColor(Color.parseColor("#5587cefa")));
-                map.addCircle(new CircleOptions()
-                        .center(new LatLng(37.4932593, 126.9793331))
-                        .radius(50)
-                        .strokeColor(Color.parseColor("#884169e1"))
-                        .fillColor(Color.parseColor("#5587cefa")));
-
 
 
             }
@@ -86,6 +72,8 @@ public class SolostopActivity extends AppCompatActivity {
 
         // 위치 정보 확인을 위해 정의한 메소드 호출
         startLocationService();
+
+
     }//end of onCreate
 
     // 위치 정보 확인을 위해 정의한 메소드
@@ -98,7 +86,7 @@ public class SolostopActivity extends AppCompatActivity {
 
         GPSListener gpsListener = new GPSListener();
 
-        long minTime = 5000;//GPS정보 전달 시간 지정 - 10초마다 위치정보 전달
+        long minTime = 1000;//GPS정보 전달 시간 지정 - 1초마다 위치정보 전달
         float minDistance = 0;//이동거리 지정 - 이동하면 무조건 갱신
 
         //showCurrentLocation((double)latitude_position,(double)longitude_position);//위치이동
@@ -134,16 +122,18 @@ public class SolostopActivity extends AppCompatActivity {
         //Toast.makeText(getApplicationContext(), "위치 확인 시작함.", Toast.LENGTH_SHORT).show();
     }//end of startLocationService()
 
+
     //위치 정보 확인을 위한 위치 리스너 정의
     private class GPSListener implements LocationListener {
         //위치 정보가 확인(수신)될 때마다 자동 호출되는 메소드
         public void onLocationChanged(Location location) {
-            map.clear();
+
             Double latitude = location.getLatitude();
             Double longitude = location.getLongitude();
             latitude_position = (float)location.getLatitude();
             longitude_position = (float)location.getLongitude();
-            if(location.getAccuracy()<100||count==0){
+            if(location.getAccuracy()<1000||count==0){
+                map.clear();
                 String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
                 Log.i("GPSLocationService", msg);
 
@@ -158,13 +148,28 @@ public class SolostopActivity extends AppCompatActivity {
                 count++;
                 //editor.putString("ID", ID);
 
+                LatLng makerPoint = new LatLng(latitude-0.000225f,longitude);
                 MarkerOptions optFirst = new MarkerOptions();
-                optFirst.position(nowPoint);// 위도 • 경도
+                optFirst.position(makerPoint);// 위도 • 경도
                 optFirst.icon(BitmapDescriptorFactory.fromResource(
                         R.mipmap.ic_launcher_round));
 
                 map.addMarker(optFirst).showInfoWindow();
+                map.addCircle(new CircleOptions()
+                        .center(nowPoint)
+                        .radius(100)
+                        .strokeColor(Color.parseColor("#88FF4081"))
+                        .fillColor(Color.parseColor("#55ec068d")));
             }
+
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4515900, 127.1276563))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.3986291, 127.1051303))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
         }
 
@@ -204,7 +209,6 @@ public class SolostopActivity extends AppCompatActivity {
          */
 
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
 
     }// end of showCurrentLocation
 
