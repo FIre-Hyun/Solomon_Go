@@ -72,7 +72,8 @@ public class SolostopActivity extends AppCompatActivity {
                         return false;
                     }
                 });
-
+                map.getUiSettings().setAllGesturesEnabled(false);
+                map.getUiSettings().setMapToolbarEnabled(false);
             }
         });//end of fragment.getMapAsync
 
