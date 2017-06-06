@@ -1,13 +1,16 @@
 package com.example.kimhyun.solomon_go;
 
+import com.example.kimhyun.solomon_go.NearMember;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -66,10 +69,13 @@ public class NearsolomonActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NearMember item = (NearMember)adapter.getItem(position);
+                NearMember item2 = new NearMember();
                 Intent intent = new Intent(getApplicationContext(), DialogAcitivy.class);
                 String profile = item.getName();
                 intent.putExtra("profile",profile);
 
+                Bitmap img = drawableToBitmap(item.getIcon());
+                intent.putExtra("img",img);
 
                 startActivity(intent);
             }
@@ -243,4 +249,17 @@ public class NearsolomonActivity extends AppCompatActivity {
 
     }
 
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+
+    }
 }
