@@ -1,6 +1,5 @@
 package com.example.kimhyun.solomon_go;
 
-import com.example.kimhyun.solomon_go.NearMember;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,14 +9,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -204,7 +201,6 @@ public class NearsolomonActivity extends AppCompatActivity {
                 //drawable = getResources().getDrawable(R.drawable.cast_abc_scrubber_control_off_mtrl_alpha);
 
                 adapter.addItem(drawable, name, age) ;
-                Toast.makeText(getApplicationContext(), "aaa", Toast.LENGTH_SHORT).show();
 
             }
 

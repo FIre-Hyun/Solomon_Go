@@ -190,6 +190,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     Log.d("Login", "Insert Data Complete");
 
+                    Log.d("lgdata", data);
+                    Log.d("lgid", id);
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
 
