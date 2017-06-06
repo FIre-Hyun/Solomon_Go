@@ -38,6 +38,8 @@ public class NearsolomonActivity extends AppCompatActivity {
 
     NearMemberAdapter adapter;
 
+    JSONArray jsonArray;
+
     ListView mlistView;
     String mJsonString;
 
@@ -56,14 +58,19 @@ public class NearsolomonActivity extends AppCompatActivity {
         mlistView = (ListView) findViewById(R.id.listView_main_list);
         adapter = new NearMemberAdapter();
 
-
         GetData task = new GetData();
         task.execute("http://jun123101.cafe24.com/");
 
         mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                NearMember item = (NearMember)adapter.getItem(position);
                 Intent intent = new Intent(getApplicationContext(), DialogAcitivy.class);
+                String profile = item.getName();
+                intent.putExtra("profile",profile);
+
+
                 startActivity(intent);
             }
         });
