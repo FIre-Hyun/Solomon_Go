@@ -1,5 +1,6 @@
 package com.example.kimhyun.solomon_go;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +25,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+
 public class SolostopActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private GoogleMap map;
@@ -33,6 +42,10 @@ public class SolostopActivity extends AppCompatActivity {
     int count=0;
     float latitude_position,longitude_position;
     double d_latitude,d_longitude;
+
+    String id;
+    SharedPreferences sp_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +58,11 @@ public class SolostopActivity extends AppCompatActivity {
 
         latitude_position = save_position.getFloat("latitude",37.4512074f);
         longitude_position = save_position.getFloat("longitude",127.1277899f);
+
+        sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+
+        id = sp_id.getString("ID", "");
+
 
 
         //LatLng nowPoint = new LatLng((double)latitude_position,(double)longitude_position);
@@ -150,8 +168,13 @@ public class SolostopActivity extends AppCompatActivity {
             longitude_position = (float)location.getLongitude();
             if(location.getAccuracy()<1000||count==0){
                 map.clear();
-                String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
+                String msg = "Latitude : "+ latitude.toString() + "\nLongitude:"+ longitude.toString();
                 Log.i("GPSLocationService", msg);
+
+
+                insertToDatabase(latitude.toString(), longitude.toString());
+
+
 
                 latitude_position = (float)location.getLatitude();
                 editor_position.putFloat("latitude",latitude_position);
@@ -249,4 +272,73 @@ public class SolostopActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
     }
+
+    private void insertToDatabase(String latitude, String longitude) {
+
+        class InsertData extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+
+                super.onPostExecute(s);
+
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                try {
+                    String latitude = (String) params[0];
+                    String longitude = (String) params[1];
+
+                    String link = "http://jun123101.cafe24.com/insertgps.php";
+                    String data = URLEncoder.encode("latitude", "UTF-8") + "="
+                            + URLEncoder.encode(latitude, "UTF-8");
+                    data += "&" + URLEncoder.encode("longitude", "UTF-8") + "="
+                            + URLEncoder.encode(longitude, "UTF-8");
+                    data += "&" + URLEncoder.encode("id", "UTF-8") + "="
+                            + URLEncoder.encode(id, "UTF-8");
+
+                    URL url = new URL(link);
+                    URLConnection conn = url.openConnection();
+
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr =
+                            new OutputStreamWriter(conn.getOutputStream());
+
+                    wr.write(data);
+                    wr.flush();
+
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(conn.getInputStream()));
+
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+
+                    // Read Server Response
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    return sb.toString();
+                } catch (Exception e) {
+
+                    return new String("Exception: " + e.getMessage());
+                }
+
+            }
+        }
+
+        InsertData task = new InsertData();
+        task.execute(latitude, longitude);
+    }
+
+
+
 }//end of MainActivity
