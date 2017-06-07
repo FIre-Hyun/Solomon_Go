@@ -4,42 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_background"
     tools:context="com.example.kimhyun.solomon_go.MainActivity">
-
-    <ImageView
-        android:id="@+id/top_bar"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorPink" />
-
-    <TextView
-        android:id="@+id/solomon_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@color/colorPink"
-        android:text="  SOLOMON GO"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:translationY="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/btn_Main_Setting"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
         android:onClick="onClick"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/settings" />
+        app:srcCompat="@drawable/main_setting_button" />
 
     <ImageView
         android:id="@+id/btn_Main_Profile"
@@ -49,67 +27,77 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="26dp"
         android:onClick="onClick"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_bar"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/circle"
+        tools:layout_editor_absoluteY="71dp" />
 
     <ImageView
         android:id="@+id/btn_Main_Nearsolomon"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="62dp"
-        android:layout_marginStart="62dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:onClick="onClick"
+        app:srcCompat="@drawable/main_button_1"
+        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_Main_Profile"
-        app:srcCompat="@drawable/square" />
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="330dp" />
 
     <ImageView
         android:id="@+id/btn_Main_Recently"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="20dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
         android:onClick="onClick"
-        app:layout_constraintLeft_toRightOf="@+id/btn_Main_Nearsolomon"
-        app:layout_constraintTop_toBottomOf="@+id/btn_Main_Profile"
-        app:srcCompat="@drawable/square" />
+        app:srcCompat="@drawable/main_button_2"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_Main_Nearsolomon"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.825" />
 
     <ImageView
         android:id="@+id/btn_Main_Solostop"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="62dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginStart="62dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:onClick="onClick"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/btn_Main_Nearsolomon"
         app:layout_constraintTop_toBottomOf="@+id/btn_Main_Nearsolomon"
-        app:srcCompat="@drawable/square" />
+        app:srcCompat="@drawable/main_button_3"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/btn_Main_Nearsolomon"
+        app:layout_constraintHorizontal_bias="1.0" />
 
     <ImageView
         android:id="@+id/btn_Main_Bag"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="20dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:onClick="onClick"
-        app:layout_constraintLeft_toRightOf="@+id/btn_Main_Solostop"
         app:layout_constraintTop_toBottomOf="@+id/btn_Main_Recently"
-        app:srcCompat="@drawable/square" />
+        app:srcCompat="@drawable/main_button_4"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/btn_Main_Recently"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/btn_Main_Recently"
+        app:layout_constraintHorizontal_bias="1.0" />
 
     <Button
         android:id="@+id/btn_Main_Logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="50dp"
         android:text="test_logout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

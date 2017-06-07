@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,22 +8,37 @@
     tools:context="com.example.kimhyun.solomon_go.LoginRegisterActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="600dp"
+
+        android:background="@drawable/login_register_background"
+        android:layout_marginEnd="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="회원가입"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:orientation="horizontal">
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:orientation="horizontal">
 
 
@@ -44,6 +59,7 @@
                     android:text="" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,6 +82,7 @@
                     android:text="" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,8 +121,8 @@
                 <RadioGroup
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_weight="2" >
+                    android:layout_weight="2"
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/rb_man"
@@ -123,6 +140,7 @@
                 </RadioGroup>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,6 +172,7 @@
 
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -176,6 +195,7 @@
                     android:text="" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -198,6 +218,7 @@
                     android:text="" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -220,11 +241,11 @@
                     android:text="" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
 
 
                 <TextView
@@ -248,17 +269,18 @@
                 android:orientation="horizontal">
 
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="사진등록어떻게하징" />
+
                 <Button
                     android:id="@+id/btn_gallery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:background="@drawable/login_register_gallery_button"
                     android:text="갤러리에서 가져오기" />
 
 
@@ -271,16 +293,23 @@
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/common_google_signin_btn_icon_light" />
 
-
             <Button
                 android:id="@+id/btn_register"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="등록하기" />
+                android:layout_height="120dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:background="@drawable/login_register_join_button"
+                android:text="회원가입"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
+
         </LinearLayout>
+
 
     </ScrollView>
 
 
-</LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
