@@ -1,12 +1,18 @@
 package com.example.kimhyun.solomon_go;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +22,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,41 +32,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 
 
 public class NearsolomonActivity extends AppCompatActivity {
@@ -76,7 +55,7 @@ public class NearsolomonActivity extends AppCompatActivity {
     ListView mlistView;
     String mJsonString;
 
-    ImageView imageView;
+    ImageView imageView, btn_reload;
 
     Bitmap bmImg;
 
@@ -91,10 +70,18 @@ public class NearsolomonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nearsolomon);
 
         mlistView = (ListView) findViewById(R.id.listView_main_list);
+        btn_reload = (ImageView) findViewById(R.id.btn_reload);
+
         adapter = new NearMemberAdapter();
 
-        GetData task = new GetData();
-        task.execute("http://jun123101.cafe24.com/");
+        sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+
+        Location lastLocation = starLocationService();
+        Double latitude = lastLocation.getLatitude();
+        Double longitude = lastLocation.getLongitude();
+
+        compareGPS(latitude.toString(), longitude.toString());
+
 
         mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -112,91 +99,132 @@ public class NearsolomonActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        
+        btn_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                adapter = new NearMemberAdapter();
+
+                Location lastLocation = starLocationService();
+                Double latitude = lastLocation.getLatitude();
+                Double longitude = lastLocation.getLongitude();
+
+                compareGPS(latitude.toString(), longitude.toString());
+
+            }
+        });
     }
 
+    private void compareGPS(String latitude, String longitude) {
 
-    private class GetData extends AsyncTask<String, Void, String> {
-        ProgressDialog progressDialog;
-        String errorString = null;
+        class InsertGPS extends AsyncTask<String, Void, String> {
+            ProgressDialog progressDialog;
+            String errorString = null;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(NearsolomonActivity.this,
-                    "Please Wait", null, true, true);
-        }
-
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            progressDialog.dismiss();
-            Log.d(TAG, "response  - " + result);
-
-            mJsonString = result;
-            showResult();
-        }
-
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String serverURL = params[0]+"near.php";
-
-
-            try {
-
-                URL url = new URL(serverURL);
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.connect();
-
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "response code - " + responseStatusCode);
-
-                InputStream inputStream;
-                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                } else {
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while ((line = bufferedReader.readLine()) != null) {
-                    sb.append(line);
-                }
-
-
-                bufferedReader.close();
-
-
-                return sb.toString().trim();
-
-
-            } catch (Exception e) {
-
-                Log.d(TAG, "InsertData: Error ", e);
-                errorString = e.toString();
-
-                return null;
+                progressDialog = ProgressDialog.show(NearsolomonActivity.this,
+                        "Please Wait", null, true, true);
             }
 
-        }
-    }
 
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+
+                progressDialog.dismiss();
+                Log.d(TAG, "response  - " + result);
+
+                mJsonString = result;
+                showResult();
+            }
+
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String serverURL ="http://jun123101.cafe24.com/near.php";
+
+
+                try {
+                    String latitude =  params[0];
+                    String longitude = params[1];
+
+                    String data = URLEncoder.encode("latitude", "UTF-8") + "="
+                            + URLEncoder.encode(latitude, "UTF-8");
+                    data += "&" + URLEncoder.encode("longitude", "UTF-8") + "="
+                            + URLEncoder.encode(longitude, "UTF-8");
+
+//                    URL url = new URL(serverURL);
+                    Log.d("Test", data);
+
+                    URL url = new URL(serverURL);
+                    URLConnection conn = url.openConnection();
+
+                    Log.d("Test", "1");
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr =
+                            new OutputStreamWriter(conn.getOutputStream());
+
+                    Log.d("Test", "2");
+                    wr.write(data);
+                    wr.flush();
+
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(conn.getInputStream()));
+
+//                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+//
+//
+//                    httpURLConnection.setReadTimeout(5000);
+//                    httpURLConnection.setConnectTimeout(5000);
+//                    httpURLConnection.connect();
+//
+//
+//                    int responseStatusCode = httpURLConnection.getResponseCode();
+//                    Log.d(TAG, "response code - " + responseStatusCode);
+//
+//                    InputStream inputStream;
+//                    if (responseStatusCode == HttpURLConnection.HTTP_OK) {
+//                        inputStream = httpURLConnection.getInputStream();
+//                    } else {
+//                        inputStream = httpURLConnection.getErrorStream();
+//                    }
+//
+//
+//                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+//                    BufferedReader reader = new BufferedReader(inputStreamReader);
+
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+
+
+                    reader.close();
+
+
+                    return sb.toString().trim();
+
+
+                } catch (Exception e) {
+
+                    Log.d(TAG, "InsertData: Error ", e);
+                    errorString = e.toString();
+
+                    return null;
+                }
+
+            }
+        }
+        InsertGPS task = new InsertGPS();
+        task.execute(latitude, longitude);
+    }
 
     private void showResult() {
         try {
@@ -212,6 +240,10 @@ public class NearsolomonActivity extends AppCompatActivity {
                 String id = item.getString(TAG_ID);
                 String name = item.getString(TAG_NAME);
                 String age = item.getString(TAG_AGE);
+
+                if(!id.equals(sp_id.getString("ID",""))){
+
+
 //
 //                URL imageURL = new URL("http://jun123101.cafe24.com/picture/" + id + ".png");
 //
@@ -224,19 +256,19 @@ public class NearsolomonActivity extends AppCompatActivity {
 //                bmImg = BitmapFactory.decodeStream(is);
 //
 //                imageView.setImageBitmap(bmImg);
-                GetImage imagetask = new GetImage();
-                bmImg = imagetask.execute("http://jun123101.cafe24.com/picture/picture_" + id + ".png").get();
+                    GetImage imagetask = new GetImage();
+                    bmImg = imagetask.execute("http://jun123101.cafe24.com/picture/picture_" + id + ".png").get();
 
-                drawable = new BitmapDrawable(getResources(), bmImg);
+                    drawable = new BitmapDrawable(getResources(), bmImg);
 
-                if(drawable != null) {
+                    if (drawable != null) {
 
-                    Log.d("drawable2", drawable.toString());
+                        Log.d("drawable2", drawable.toString());
+                    }
+                    //drawable = getResources().getDrawable(R.drawable.cast_abc_scrubber_control_off_mtrl_alpha);
+
+                    adapter.addItem(drawable, name, age);
                 }
-                //drawable = getResources().getDrawable(R.drawable.cast_abc_scrubber_control_off_mtrl_alpha);
-
-                adapter.addItem(drawable, name, age) ;
-
             }
 
 
@@ -295,7 +327,7 @@ public class NearsolomonActivity extends AppCompatActivity {
     }
     //여기서부터 gps부분
 
-    private void starLocationService(){
+    private Location starLocationService(){
         LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         GPSListener gpsListener = new GPSListener();
 
@@ -327,11 +359,14 @@ public class NearsolomonActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "
                 //        + latitude + "\nLongitude:" + longitude, Toast.LENGTH_LONG).show();
                 LatLng nowPoint = new LatLng(latitude,longitude);
+
+                return lastLocation;
             }
 
         } catch(SecurityException ex) {
             ex.printStackTrace();
         }
+        return null;
     }
     private class GPSListener implements LocationListener {
         //위치 정보가 확인(수신)될 때마다 자동 호출되는 메소드

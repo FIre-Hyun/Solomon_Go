@@ -9,12 +9,29 @@
     android:layout_margin="15dp"
     android:padding="10dp">
 
-    <ListView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        android:id="@+id/listView_main_list" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_margin="5dp"
+                android:padding="5dp"
+                android:id="@+id/listView_main_list" />
+
+            <ImageView
+                android:id="@+id/btn_reload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/cast_expanded_controller_seekbar_thumb" />
+
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
