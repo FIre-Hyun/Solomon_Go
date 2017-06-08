@@ -42,7 +42,7 @@
         <!-- 구글맵 API v2 키 설정(키는 개별적으로 받아야 함) -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDxj0A0VvCIonvhgZ1iPDY7ZtXYoy5V5tM" />
+            android:value="AIzaSyA8v9yMvBsgVtOUP7WO3bH8HihnWCFSbTo" />
 
         <!-- GMS 라이브러리 버전 설정 -->
         <meta-data
