@@ -69,6 +69,7 @@ public class NearsolomonActivity extends AppCompatActivity {
 
     String id;
     SharedPreferences sp_id;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,7 @@ public class NearsolomonActivity extends AppCompatActivity {
         adapter = new NearMemberAdapter();
 
         sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        editor = sp_id.edit();
 
         Location lastLocation = starLocationService();
         Double latitude = lastLocation.getLatitude();
@@ -96,11 +98,13 @@ public class NearsolomonActivity extends AppCompatActivity {
                 NearMember item = (NearMember)adapter.getItem(position);
                 NearMember item2 = new NearMember();
                 Intent intent = new Intent(getApplicationContext(), DialogAcitivy.class);
-                String profile = item.getName();
+                String profile = item.getId();
                 intent.putExtra("profile",profile);
+                editor.putString("lover", item.getId());
 
-                Bitmap img = drawableToBitmap(item.getIcon());
-                intent.putExtra("img",getRoundedBitmap(img));
+//                Bitmap img = drawableToBitmap(item.getIcon());
+//                intent.putExtra("img",getRoundedBitmap(img));
+                intent.putExtra("before", "near");
 
                 startActivity(intent);
             }
@@ -182,28 +186,6 @@ public class NearsolomonActivity extends AppCompatActivity {
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(conn.getInputStream()));
 
-//                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//
-//
-//                    httpURLConnection.setReadTimeout(5000);
-//                    httpURLConnection.setConnectTimeout(5000);
-//                    httpURLConnection.connect();
-//
-//
-//                    int responseStatusCode = httpURLConnection.getResponseCode();
-//                    Log.d(TAG, "response code - " + responseStatusCode);
-//
-//                    InputStream inputStream;
-//                    if (responseStatusCode == HttpURLConnection.HTTP_OK) {
-//                        inputStream = httpURLConnection.getInputStream();
-//                    } else {
-//                        inputStream = httpURLConnection.getErrorStream();
-//                    }
-//
-//
-//                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-//                    BufferedReader reader = new BufferedReader(inputStreamReader);
-
                     StringBuilder sb = new StringBuilder();
                     String line;
 
@@ -273,7 +255,7 @@ public class NearsolomonActivity extends AppCompatActivity {
                     }
                     //drawable = getResources().getDrawable(R.drawable.cast_abc_scrubber_control_off_mtrl_alpha);
 
-                    adapter.addItem(drawable, name, age);
+                    adapter.addItem(drawable, id, name, age);
                 }
             }
 

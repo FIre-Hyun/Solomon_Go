@@ -18,11 +18,15 @@ import java.util.ArrayList;
 public class NearMember {
 
     private Drawable iconDrawable ;
+    private String idStr;
     private String nameStr ;
     private String ageStr ;
 
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
+    }
+    public void setId(String id) {
+        idStr = id ;
     }
     public void setName(String name) {
         nameStr = name ;
@@ -33,6 +37,9 @@ public class NearMember {
 
     public Drawable getIcon() {
         return this.iconDrawable ;
+    }
+    public String getId() {
+        return this.idStr ;
     }
     public String getName() {
         return this.nameStr ;
@@ -72,6 +79,7 @@ class NearMemberAdapter extends BaseAdapter {
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
         ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView_list_picture) ;
+        TextView idTextView = (TextView) convertView.findViewById(R.id.textView_list_id) ;
         TextView nameTextView = (TextView) convertView.findViewById(R.id.textView_list_name) ;
         TextView ageTextView = (TextView) convertView.findViewById(R.id.textView_list_age) ;
 
@@ -80,6 +88,7 @@ class NearMemberAdapter extends BaseAdapter {
 
         // 아이템 내 각 위젯에 데이터 반영
         iconImageView.setImageDrawable(listViewItem.getIcon());
+        idTextView.setText(listViewItem.getId());
         nameTextView.setText(listViewItem.getName());
         ageTextView.setText(listViewItem.getAge());
 
@@ -99,9 +108,10 @@ class NearMemberAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable icon, String name, String age) {
+    public void addItem(Drawable icon, String id, String name, String age) {
         NearMember item = new NearMember();
 
+        item.setId(id);
         item.setIcon(icon);
         item.setName(name);
         item.setAge(age);

@@ -15,8 +15,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -29,15 +27,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -166,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_Main_Recently:
                 intent = new Intent(MainActivity.this, DialogAcitivy.class);//여기서 이미지나 프로필내용을 보내주어야 한다
-                //intent = new Intent(MainActivity.this, RecentlyActivity.class);
+                intent.putExtra("before", "recently");
                 break;
             case R.id.btn_Main_Logout:
 

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "898595264045",
+    "firebase_url": "https://solomongo-fcm.firebaseio.com",
+    "project_id": "solomongo-fcm",
+    "storage_bucket": "solomongo-fcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898595264045:android:67e3fff46389aaca",
+        "android_client_info": {
+          "package_name": "com.example.kimhyun.solomon_go"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898595264045-gpg1c4v66ogha6mmhu235a7eqmir5hah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl4lmwfDUVC9zuhY2F1p-YNiCmcT-7y9s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

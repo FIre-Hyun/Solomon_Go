@@ -3,7 +3,7 @@ package com.example.kimhyun.solomon_go;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +35,8 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
     TextView profile_Name, profile_Sex, profile_Age, profile_Hobby, profile_Type, profile_Job, profile_Home;
     Bundle bundel;
 
+    String gps_id;
+
     String mJsonString;
 
     @Override
@@ -54,14 +56,42 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
         btn_Close.setOnClickListener(this);
 
         Intent intent = getIntent();
-        profile_Image.setImageBitmap((Bitmap) intent.getParcelableExtra("img"));
-        profile_Name.setText(intent.getStringExtra("profile"));
+        Log.d("Dial", "111");
+//        profile_Image.setImageBitmap((Bitmap) intent.getParcelableExtra("img"));
 
-        Log.d("name", profile_Name.getText().toString());
-        insertToDatabase(profile_Name.getText().toString());
+
+        //String log = intent.getStringExtra("profile").toString();
+        //Log.d("Dial", log);
+
+        if(intent.getStringExtra("before").toString().equals("near")){
+
+            Log.d("Dial", "222");
+//            profile_Name.setText(intent.getStringExtra("profile"));
+            Log.d("Dial-lover값 near", "");
+
+            insertToDatabase(intent.getStringExtra("profile").toString());
+        }
+        else if(intent.getStringExtra("before").toString().equals("recently")){
+//            profile_Name.setText(~~);
+
+            Log.d("Dial", "333");
+            SharedPreferences auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+
+            String log = auto_login.getString("lover", "");
+            Log.d("Dial-lover값", log);
+
+            insertToDatabase(auto_login.getString("lover", ""));
+        }
+        else{
+
+            Log.d("Dial", "333");
+            Toast.makeText(getApplicationContext(), "데이터가 없어요 ㅠㅠ", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
     }
 
-    private void insertToDatabase(String name) {
+    private void insertToDatabase(String id) {
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
@@ -83,10 +113,11 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
                 try {
 
-                    Log.d("Login", result);
+                    Log.d("Dial-Json값", result);
 
                     JSONObject jsonObj = new JSONObject(result);
 
+                    String id = jsonObj.getJSONArray("result").getJSONObject(0).getString("id");
                     String name = jsonObj.getJSONArray("result").getJSONObject(0).getString("name");
                     String sex = jsonObj.getJSONArray("result").getJSONObject(0).getString("sex");
                     String age = jsonObj.getJSONArray("result").getJSONObject(0).getString("age");
@@ -97,7 +128,15 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
 
 
-                    if(name != "null"){       //로그인이 성공한다면
+                    if(id != "null"){       //로그인이 성공한다면
+
+                        SharedPreferences auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = auto_login.edit();
+
+                        editor.putString("lover", id);
+                        editor.commit();
+
+                        gps_id = id;
 
                         profile_Name.setText(name);
                         profile_Age.setText(age);
@@ -113,7 +152,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                             profile_Sex.setText("여자");
                     }
                     else{
-                        Toast.makeText(getApplicationContext(), "로그인 실패! ㅠㅠ ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "불러오기 실패! ㅠㅠ ", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -127,12 +166,12 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                 String link = "http://jun123101.cafe24.com/detail.php";
 
                 try {
-                    String name =  params[0];
+                    String id =  params[0];
 
-                    String data = URLEncoder.encode("name", "UTF-8") + "="
-                            + URLEncoder.encode(name, "UTF-8");
+                    String data = URLEncoder.encode("id", "UTF-8") + "="
+                            + URLEncoder.encode(id, "UTF-8");
 
-                    Log.d("Login", "Insert Data Complete");
+                    Log.d("Dialog", "Insert Data Complete");
 
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
@@ -155,7 +194,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                         sb.append(line);
                         break;
                     }
-                    Log.d("sbbb", sb.toString());
+                    Log.d("sb", sb.toString());
                     return sb.toString();
                 } catch (Exception e) {
 
@@ -167,13 +206,104 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
         }
 
         InsertData task = new InsertData();
-        task.execute(name);
+        task.execute(id);
     }
 
 
     @Override
     public void onClick(View v) {
 
-        finish();
+        Log.d("Dial-onclick", gps_id);
+        gainGPS(gps_id);
+        
     }
+
+
+
+    private void gainGPS(String id) {
+
+        class InsertData extends AsyncTask<String, Void, String> {
+            ProgressDialog loading;
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                loading = ProgressDialog.show(DialogAcitivy.this,
+                        "Please Wait", null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+
+                loading.dismiss();
+
+                try {
+
+                    Log.d("Dial-Json값", result);
+
+                    JSONObject jsonObj = new JSONObject(result);
+
+                    String gps1 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps1");
+                    String gps2 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps2");
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@여기있는 gps1, gps2값 쓰면 돼
+                    Toast.makeText(getApplicationContext(), "gps1 = "+gps1+"\ngps2 = "+gps2, Toast.LENGTH_SHORT).show();
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+                String link = "http://jun123101.cafe24.com/gaingps.php";
+
+                try {
+                    String id =  params[0];
+
+                    String data = URLEncoder.encode("id", "UTF-8") + "="
+                            + URLEncoder.encode(id, "UTF-8");
+
+                    Log.d("Dialog", "Insert Data Complete");
+
+                    URL url = new URL(link);
+                    URLConnection conn = url.openConnection();
+
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr =
+                            new OutputStreamWriter(conn.getOutputStream());
+
+                    wr.write(data);
+                    wr.flush();
+
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(conn.getInputStream()));
+
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+
+                    // Read Server Response
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    Log.d("sb", sb.toString());
+                    return sb.toString();
+                } catch (Exception e) {
+
+                    return new String("Exception: " + e.getMessage());
+                }
+
+
+            }
+        }
+
+        InsertData task = new InsertData();
+        task.execute(id);
+    }
+
 }
