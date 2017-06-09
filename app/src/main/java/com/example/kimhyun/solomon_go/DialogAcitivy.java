@@ -4,6 +4,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,8 +28,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -38,6 +50,10 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
     String gps_id;
 
     String mJsonString;
+
+    Bitmap bmImg;
+
+    picture task;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +78,8 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
         //String log = intent.getStringExtra("profile").toString();
         //Log.d("Dial", log);
+
+        task = new picture();
 
         if(intent.getStringExtra("before").toString().equals("near")){
 
@@ -129,6 +147,8 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
 
                     if(id != "null"){       //로그인이 성공한다면
+
+                        task.execute("http://jun123101.cafe24.com/picture/picture_"+id+".png");
 
                         SharedPreferences auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
                         SharedPreferences.Editor editor = auto_login.edit();
@@ -305,5 +325,60 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
         InsertData task = new InsertData();
         task.execute(id);
     }
+
+    private class picture extends AsyncTask<String, Integer, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            // TODO Auto-generated method stub
+            Log.d("Main", "back 들어옴");
+            try {
+                Log.d("Main", "try 들어옴");
+                URL myFileUrl = new URL(urls[0]);
+
+                Log.d("Main", "들어옴");
+                HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+                conn.setDoInput(true);
+                conn.connect();
+
+                InputStream is = conn.getInputStream();
+
+                bmImg = BitmapFactory.decodeStream(is);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bmImg;
+        }
+
+        protected void onPostExecute(Bitmap img) {
+            profile_Image.setImageBitmap(getRoundedBitmap(bmImg));
+        }
+
+    }
+
+    public static Bitmap getRoundedBitmap(Bitmap bitmap) {
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+
+        final int color = Color.GRAY;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawOval(rectF, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        bitmap.recycle();
+
+        return output;
+    }
+
 
 }
