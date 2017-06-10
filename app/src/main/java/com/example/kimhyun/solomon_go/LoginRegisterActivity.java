@@ -72,21 +72,16 @@ public class LoginRegisterActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item
         );
-        spin_home.setAdapter(adapter);
-
         ArrayAdapter adapter_year = ArrayAdapter.createFromResource(
                 this, R.array.birth_year, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item
         );
-        spin_home.setAdapter(adapter);
-
         ArrayAdapter adapter_month = ArrayAdapter.createFromResource(
                 this, R.array.birth_month, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item
         );
-        spin_home.setAdapter(adapter);
 
         ArrayAdapter adapter_day = ArrayAdapter.createFromResource(
                 this, R.array.birth_day, android.R.layout.simple_spinner_item);
@@ -178,16 +173,10 @@ public class LoginRegisterActivity extends AppCompatActivity {
         if (requestCode == 2) {     //pick from gallery
             Bundle extras2 = data.getExtras();
 
-//            Uri uri = data.getData();
-//            Log.d("11111", uri.toString());
-//            getimageNameToUri(uri);
-
             if (extras2 != null) {
                 Bitmap photo = extras2.getParcelable("data");
                 Log.d("register_photo", photo.toString());
                 imageView_picture.setImageBitmap(photo);
-
-                editor.putString("picture", photo.toString());
 
             }
         }
