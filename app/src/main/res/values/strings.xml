@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Solomon_Go</string>
+    <string name="app_name">솔로몬 GO</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
