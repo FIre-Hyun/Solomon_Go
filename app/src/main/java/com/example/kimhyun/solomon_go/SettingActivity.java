@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -20,7 +21,7 @@ import java.net.URLEncoder;
 
 public class SettingActivity extends AppCompatActivity {
 
-    CheckBox ckbox_disable, ckbox_push, ckbox_picture, ckbox_name, ckbox_age, ckbox_hobby, ckbox_job, ckbox_home, ckbox_etc, ckbox_sex;
+    CheckBox ckbox_disable;
 
     Button btn_logout;
 
@@ -34,20 +35,26 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         ckbox_disable = (CheckBox) findViewById(R.id.ckbox_disable);
-        ckbox_push = (CheckBox) findViewById(R.id.ckbox_push);
-        ckbox_picture = (CheckBox) findViewById(R.id.ckbox_picture);
-        ckbox_name = (CheckBox) findViewById(R.id.ckbox_name);
-        ckbox_age = (CheckBox) findViewById(R.id.ckbox_age);
-        ckbox_hobby = (CheckBox) findViewById(R.id.ckbox_hobby);
-        ckbox_job = (CheckBox) findViewById(R.id.ckbox_job);
-        ckbox_home = (CheckBox) findViewById(R.id.ckbox_home);
-        ckbox_etc = (CheckBox) findViewById(R.id.ckbox_etc);
-        ckbox_sex = (CheckBox) findViewById(R.id.ckbox_sex);
 
         btn_logout = (Button) findViewById(R.id.btn_logout);
 
         sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         editor = sp_id.edit();
+
+        ckbox_disable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                switch (buttonView.getId()){
+                    case R.id.ckbox_disable:
+                        if(isChecked) {
+                            deleteGPS(sp_id.getString("ID", ""));
+                            //Toast.makeText(this, "비활성화 되었습니다.\n이제 다른사람이 검색할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                }
+            }
+        });
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +137,5 @@ public class SettingActivity extends AppCompatActivity {
         InsertData task = new InsertData();
         task.execute(id);
     }
-
-
 
 }

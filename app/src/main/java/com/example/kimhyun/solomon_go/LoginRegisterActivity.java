@@ -1,5 +1,6 @@
 package com.example.kimhyun.solomon_go;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,13 +35,13 @@ import java.net.URLEncoder;
 
 public class LoginRegisterActivity extends AppCompatActivity {
 
-    Button btn_register, btn_gallery;
+    Button btn_gallery;
 
     EditText et_id, et_password, et_name, et_hobby, et_type, et_job;   //생년월일 하는거 어떻게하는지 몰라서 아직 안함
 
     Spinner spin_home, spin_year, spin_month, spin_day;
 
-    ImageView imageView_picture;
+    ImageView imageView_picture, btn_register;
 
     RadioButton rb_man, rb_girl;
 
@@ -56,7 +57,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
 
-        btn_register = (Button) findViewById(R.id.btn_register);
+        btn_register = (ImageView) findViewById(R.id.btn_register);
         btn_gallery = (Button) findViewById(R.id.btn_gallery);
 
         et_id = (EditText) findViewById(R.id.et_id);
@@ -66,7 +67,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
         et_type = (EditText) findViewById(R.id.et_type);
         et_job = (EditText) findViewById(R.id.et_job);
 
-        imageView_picture = (ImageView) findViewById(R.id.imageView_picture);
+        imageView_picture = (ImageView) findViewById(R.id.btn_register);
 
         spin_home = (Spinner) findViewById(R.id.spinner_home);
         spin_year = (Spinner) findViewById(R.id.spinner_year);
@@ -76,8 +77,19 @@ public class LoginRegisterActivity extends AppCompatActivity {
         rb_man = (RadioButton) findViewById(R.id.rb_man);
         rb_girl = (RadioButton) findViewById(R.id.rb_girl);
 
+        auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        editor = auto_login.edit();
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(
+        Intent intent = getIntent();
+        String test = intent.getStringExtra("before").toString();
+        if(intent.getStringExtra("before").toString().equals("change")) {
+            et_id.setText(auto_login.getString("ID", ""));
+            btn_register.setImageResource(R.drawable.app_icon);
+            //수정하기로 바꾸기
+        }
+
+
+            ArrayAdapter adapter = ArrayAdapter.createFromResource(
                 this, R.array.home, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item

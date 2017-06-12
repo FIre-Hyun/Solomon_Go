@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = null;
         switch (v.getId()) {
             case R.id.btn_Main_Profile:
-                intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent = new Intent(MainActivity.this, LoginRegisterActivity.class);
+                intent.putExtra("before", "change");
                 break;
             case R.id.btn_Main_Solostop:
                 intent = new Intent(MainActivity.this, SolostopActivity.class);

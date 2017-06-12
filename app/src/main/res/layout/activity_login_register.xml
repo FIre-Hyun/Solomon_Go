@@ -308,20 +308,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/common_google_signin_btn_icon_light" />
+                android:scaleType="fitXY" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_register"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:background="@drawable/login_register_join_button"
-                android:text="회원가입"
-                android:textColor="@android:color/white"
-                android:textSize="30sp" />
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/login_register_join_button" />
 
         </LinearLayout>
 
