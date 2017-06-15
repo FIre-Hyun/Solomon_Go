@@ -240,8 +240,10 @@ public class SolostopActivity extends AppCompatActivity {
                                 R.mipmap.ic_launcher_round));
 
                         map.addMarker(optFirst).showInfoWindow();
-
-
+                        map.addMarker(new MarkerOptions()
+                                .position(new LatLng(latitude_solo, longitude_solo))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+                        ).showInfoWindow();
                     }
             }
         }
