@@ -40,6 +40,7 @@ public class SolostopActivity extends AppCompatActivity {
     int item,select,count=0;
     float latitude_position,longitude_position;
     double latitude_solo,longitude_solo;
+    LatLng nowPosition, makerPoint;
 
     Intent intent;
     String id;
@@ -60,7 +61,6 @@ public class SolostopActivity extends AppCompatActivity {
         item = sp_id.getInt("item",0);
         // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
 
-
         //구글 맵 객체 참조
         fragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -70,8 +70,10 @@ public class SolostopActivity extends AppCompatActivity {
 
                 latitude_position = sp_id.getFloat("latitude",30.4512074f);
                 longitude_position = sp_id.getFloat("longitude",127.1277899f);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude_position,longitude_position),17));
-                LatLng makerPoint = new LatLng(latitude_position-0.000225f,longitude_position);
+                nowPosition = new LatLng(latitude_position,longitude_position);
+
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPosition,17));
+                makerPoint = new LatLng(latitude_position-0.000225f,longitude_position);
                 MarkerOptions optFirst = new MarkerOptions();
                 optFirst.position(makerPoint);// 위도 • 경도
                 optFirst.icon(BitmapDescriptorFactory.fromResource(
@@ -80,6 +82,11 @@ public class SolostopActivity extends AppCompatActivity {
                 map.addMarker(optFirst).showInfoWindow();
                 switch (select) {
                     case 1:
+                        map.addCircle(new CircleOptions()
+                                .center(nowPosition)
+                                .radius(100)
+                                .strokeColor(Color.parseColor("#88FF4081"))
+                                .fillColor(Color.parseColor("#55ec068d")));
                         soloStopMaker();
                         break;
                     case 2:
@@ -97,7 +104,14 @@ public class SolostopActivity extends AppCompatActivity {
                 map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-                        Toast.makeText(getApplicationContext(), "솔로포인트 획득!!", Toast.LENGTH_LONG).show();
+                        latitude_position = sp_id.getFloat("latitude",30.4512074f);
+                        longitude_position = sp_id.getFloat("longitude",127.1277899f);
+                        if(!marker.getPosition().equals(makerPoint)&&(calDistance(latitude_position,longitude_position,marker.getPosition().latitude,marker.getPosition().longitude)<100)){
+                            item = item +1;
+                            editor.putInt("item",item);
+                            editor.commit();
+                            Toast.makeText(getApplicationContext(), "솔로포인트 획득!!", Toast.LENGTH_LONG).show();
+                        }
                         return false;
                     }
                 });
@@ -181,7 +195,7 @@ public class SolostopActivity extends AppCompatActivity {
             select = intent.getIntExtra("map",0);
             switch (select){
                 case 1:
-                    if(location.getAccuracy()<1000||count==0){
+                    if(location.getAccuracy()<100000||count==0){
                         map.clear();
                         String msg = "Latitude : "+ latitude.toString() + "\nLongitude:"+ longitude.toString();
                         Log.i("GPSLocationService", msg);
@@ -192,14 +206,14 @@ public class SolostopActivity extends AppCompatActivity {
                         editor.commit();
                         latitude_position = (float)location.getLatitude();
 
-                        LatLng nowPoint = new LatLng(latitude,longitude);
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,17));
+                        nowPosition = new LatLng(latitude,longitude);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPosition,17));
                         // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
                         showCurrentLocation(latitude, longitude);//위치이동
                         count++;
                         //editor.putString("ID", ID);
 
-                        LatLng makerPoint = new LatLng(latitude-0.000225f,longitude);
+                        makerPoint = new LatLng(latitude-0.000225f,longitude);
                         MarkerOptions optFirst = new MarkerOptions();
                         optFirst.position(makerPoint);// 위도 • 경도
                         optFirst.icon(BitmapDescriptorFactory.fromResource(
@@ -207,7 +221,7 @@ public class SolostopActivity extends AppCompatActivity {
 
                         map.addMarker(optFirst).showInfoWindow();
                         map.addCircle(new CircleOptions()
-                                .center(nowPoint)
+                                .center(nowPosition)
                                 .radius(100)
                                 .strokeColor(Color.parseColor("#88FF4081"))
                                 .fillColor(Color.parseColor("#55ec068d")));
@@ -361,7 +375,46 @@ public class SolostopActivity extends AppCompatActivity {
                 .position(new LatLng(37.4492417,127.1272928))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
         ).showInfoWindow();
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(37.4537899,127.1318096))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+        ).showInfoWindow();
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(37.4536877,127.1331722))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+        ).showInfoWindow();
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(37.4531852,127.1325928))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+        ).showInfoWindow();
     }
+
+    public double calDistance(double lat1, double lon1, double lat2, double lon2){
+
+        double theta, dist;
+        theta = lon1 - lon2;
+        dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+
+        dist = dist * 60 * 1.1515;
+        dist = dist * 1.609344;    // 단위 mile 에서 km 변환.
+        dist = dist * 1000.0;      // 단위  km 에서 m 로 변환
+
+        return dist;
+    }
+
+    // 주어진 도(degree) 값을 라디언으로 변환
+    private double deg2rad(double deg){
+        return (double)(deg * Math.PI / (double)180d);
+    }
+
+    // 주어진 라디언(radian) 값을 도(degree) 값으로 변환
+    private double rad2deg(double rad){
+        return (double)(rad * (double)180d / Math.PI);
+    }
+
 
     /**
      * 현재 위치의 지도를 보여주기 위해 정의한 메소드

@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor = sp_id.edit();
 
         id = sp_id.getString("ID", "");
-        item = sp_id.getInt("item",0);
         Log.d("prefer", id);
         task.execute(imgUrl + "picture_" + id + ".png");    // 아이디를 이용해서 서버에서 사진을 받아옴
 
@@ -164,8 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_Main_Bag:
-                //intent = new Intent(MainActivity.this, BagActivity.class);
-                Log.d("main","1234");
+                item = sp_id.getInt("item",0);
                 Toast.makeText(getApplicationContext(),"현재 보유 솔로포인트는 " + item +" 입니다.", Toast.LENGTH_LONG).show();
                 break;
             case R.id.btn_Main_Recently:
