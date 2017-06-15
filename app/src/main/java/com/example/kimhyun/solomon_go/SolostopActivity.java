@@ -72,8 +72,16 @@ public class SolostopActivity extends AppCompatActivity {
                 latitude_position = sp_id.getFloat("latitude",30.4512074f);
                 longitude_position = sp_id.getFloat("longitude",127.1277899f);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude_position,longitude_position),17));
+                LatLng makerPoint = new LatLng(latitude_position-0.000225f,longitude_position);
+                MarkerOptions optFirst = new MarkerOptions();
+                optFirst.position(makerPoint);// 위도 • 경도
+                optFirst.icon(BitmapDescriptorFactory.fromResource(
+                        R.mipmap.ic_launcher_round));
+
+                map.addMarker(optFirst).showInfoWindow();
                 switch (select) {
                     case 1:
+
                         break;
                     case 2:
                         latitude_solo = intent.getDoubleExtra("latitude_solo",0);
@@ -83,7 +91,7 @@ public class SolostopActivity extends AppCompatActivity {
                                 .position(new LatLng(latitude_solo, longitude_solo))
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
                         ).showInfoWindow();
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude_solo,longitude_solo),17));
+                        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude_solo,longitude_solo),17));
                         break;
                 }
 
