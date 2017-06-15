@@ -52,6 +52,8 @@ public class LoginRegisterActivity extends AppCompatActivity {
     SharedPreferences auto_login;
     SharedPreferences.Editor editor;
 
+    Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
         et_type = (EditText) findViewById(R.id.et_type);
         et_job = (EditText) findViewById(R.id.et_job);
 
-        imageView_picture = (ImageView) findViewById(R.id.btn_register);
+        imageView_picture = (ImageView) findViewById(R.id.imageView_picture);
 
         spin_home = (Spinner) findViewById(R.id.spinner_home);
         spin_year = (Spinner) findViewById(R.id.spinner_year);
@@ -80,11 +82,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
         auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         editor = auto_login.edit();
 
-        Intent intent = getIntent();
-        String test = intent.getStringExtra("before").toString();
+        intent = getIntent();
+
         if(intent.getStringExtra("before").toString().equals("change")) {
             et_id.setText(auto_login.getString("ID", ""));
-            btn_register.setImageResource(R.drawable.app_icon);
+            imageView_picture.setImageResource(R.drawable.app_icon);
             //수정하기로 바꾸기
         }
 
@@ -157,7 +159,12 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
                     upload("http://jun123101.cafe24.com/ImageUpload.php","POST",getEncoded64ImageStringFromBitmap(imageBitmap), id);
 
-                    Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                    if(intent.getStringExtra("before").toString().equals("change")){
+                        Toast.makeText(getApplicationContext(), "프로필 수정이 완료되었습니다. ", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
