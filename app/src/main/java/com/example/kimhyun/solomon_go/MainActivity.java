@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         id = sp_id.getString("ID", "");
 
         Log.d("prefer", id);
-        task.execute(imgUrl + "picture_" + id + ".png");    // 아이디 받아와서 아이디가 들어가면 돼
+        task.execute(imgUrl + "picture_" + id + ".png");    // 아이디를 이용해서 서버에서 사진을 받아옴
 
     }
 
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private class picture extends AsyncTask<String, Integer, Bitmap> {
 
         @Override
-        protected Bitmap doInBackground(String... urls) {
+        protected Bitmap doInBackground(String... urls) {   //서버에서 이미지를 id에 맞는 이미지를 불러옴
             // TODO Auto-generated method stub
             Log.d("Main", "back 들어옴");
             try {
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-    public static Bitmap getRoundedBitmap(Bitmap bitmap) {
+    public static Bitmap getRoundedBitmap(Bitmap bitmap) {      //받아온 이미지를 동그랗게 만드는 메소드
         final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(output);
 
