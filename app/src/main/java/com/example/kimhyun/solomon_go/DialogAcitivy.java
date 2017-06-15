@@ -42,7 +42,7 @@ import java.net.URLEncoder;
  */
 
 public class DialogAcitivy extends Activity implements View.OnClickListener {
-    Button btn_Close;
+    Button btn_Close,btn_find;
     ImageView profile_Image;
     TextView profile_Name, profile_Sex, profile_Age, profile_Hobby, profile_Type, profile_Job, profile_Home;
     Bundle bundel;
@@ -54,6 +54,11 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
     Bitmap bmImg;
 
     picture task;
+
+    Intent intent;
+
+    double latitude,longitude;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,9 +74,10 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
         profile_Job = (TextView) findViewById(R.id.profile_Job);
         profile_Home = (TextView) findViewById(R.id.profile_Home);
         btn_Close = (Button) findViewById(R.id.btn_Close);
+        btn_find = (Button)findViewById(R.id.btn_find) ;
+        btn_find.setOnClickListener(this);
         btn_Close.setOnClickListener(this);
 
-        Intent intent = getIntent();
         Log.d("Dial", "111");
 //        profile_Image.setImageBitmap((Bitmap) intent.getParcelableExtra("img"));
 
@@ -81,6 +87,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
         task = new picture();
 
+        Intent intent = getIntent();
         if(intent.getStringExtra("before").toString().equals("near")){
 
             Log.d("Dial", "222");
@@ -130,7 +137,6 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                 loading.dismiss();
 
                 try {
-
                     Log.d("Dial-Json값", result);
 
                     JSONObject jsonObj = new JSONObject(result);
@@ -220,11 +226,8 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
                     return new String("Exception: " + e.getMessage());
                 }
-
-
             }
         }
-
         InsertData task = new InsertData();
         task.execute(id);
     }
@@ -233,12 +236,17 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        Log.d("Dial-onclick", gps_id);
-        gainGPS(gps_id);
-        
+        switch (v.getId()){
+            case R.id.btn_find:
+                intent = new Intent(getApplicationContext(), SolostopActivity.class);
+                Log.d("Dial-onclick", gps_id);
+                gainGPS(gps_id);
+
+                break;
+            case R.id.btn_Close:
+                finish();
+        }
     }
-
-
 
     private void gainGPS(String id) {
 
@@ -265,19 +273,21 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                     Log.d("Dial-Json값", result);
 
                     JSONObject jsonObj = new JSONObject(result);
-
-                    String gps1 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps1");
-                    String gps2 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps2");
+                    //String gps1 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps1");
+                    //String gps2 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps2");
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@여기있는 gps1, gps2값 쓰면 돼
-                    Toast.makeText(getApplicationContext(), "gps1 = "+gps1+"\ngps2 = "+gps2, Toast.LENGTH_SHORT).show();
+                    //latitude_position,longitude_position;
 
-
+                    latitude = jsonObj.getJSONArray("gaingps").getJSONObject(0).getDouble("gps1");
+                    longitude = jsonObj.getJSONArray("gaingps").getJSONObject(0).getDouble("gps2");
+                    intent.putExtra("latitude_solo",latitude);
+                    intent.putExtra("longitude_solo",longitude);
+                    intent.putExtra("map",2);
+                    startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             protected String doInBackground(String... params) {
                 String link = "http://jun123101.cafe24.com/gaingps.php";

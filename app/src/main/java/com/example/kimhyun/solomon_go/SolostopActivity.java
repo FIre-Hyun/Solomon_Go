@@ -2,6 +2,7 @@ package com.example.kimhyun.solomon_go;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -36,16 +37,16 @@ public class SolostopActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private GoogleMap map;
 
-    SharedPreferences save_position;
-    SharedPreferences.Editor editor_position;
-
     int count=0;
     float latitude_position,longitude_position;
     double d_latitude,d_longitude;
+    double latitude_solo,longitude_solo;
 
+    Intent intent;
     String id;
     SharedPreferences sp_id;
-
+    SharedPreferences.Editor editor;
+    int select;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,20 +54,11 @@ public class SolostopActivity extends AppCompatActivity {
         SupportMapFragment fragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.map);
 
-        save_position = getSharedPreferences("position",0);
-        editor_position = save_position.edit();
-
-        latitude_position = save_position.getFloat("latitude",37.4512074f);
-        longitude_position = save_position.getFloat("longitude",127.1277899f);
-
+        intent = getIntent();
         sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
-
+        editor = sp_id.edit();
+        select = intent.getIntExtra("map",0);
         id = sp_id.getString("ID", "");
-
-
-
-        //LatLng nowPoint = new LatLng((double)latitude_position,(double)longitude_position);
-        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,50));
         // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
 
 
@@ -77,12 +69,24 @@ public class SolostopActivity extends AppCompatActivity {
                 Log.d(TAG, "GoogleMap is ready.");
                 map = googleMap;
 
-                map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        //Toast.makeText(getApplicationContext(), "마커 클릭 확인용 토스트", Toast.LENGTH_LONG).show();
-                    }
-                });
+                latitude_position = sp_id.getFloat("latitude",30.4512074f);
+                longitude_position = sp_id.getFloat("longitude",127.1277899f);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude_position,longitude_position),17));
+                switch (select) {
+                    case 1:
+                        break;
+                    case 2:
+                        latitude_solo = intent.getDoubleExtra("latitude_solo",0);
+                        longitude_solo = intent.getDoubleExtra("longitude_solo",0);
+                        Toast.makeText(getApplicationContext(),latitude_solo + "\n" + longitude_solo,Toast.LENGTH_LONG).show();
+                        map.addMarker(new MarkerOptions()
+                                .position(new LatLng(latitude_solo, longitude_solo))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+                        ).showInfoWindow();
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude_solo,longitude_solo),17));
+                        break;
+                }
+
                 map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
@@ -161,56 +165,85 @@ public class SolostopActivity extends AppCompatActivity {
     private class GPSListener implements LocationListener {
         //위치 정보가 확인(수신)될 때마다 자동 호출되는 메소드
         public void onLocationChanged(Location location) {
-
             Double latitude = location.getLatitude();
             Double longitude = location.getLongitude();
+
             latitude_position = (float)location.getLatitude();
             longitude_position = (float)location.getLongitude();
-            if(location.getAccuracy()<1000||count==0){
-                map.clear();
-                String msg = "Latitude : "+ latitude.toString() + "\nLongitude:"+ longitude.toString();
-                Log.i("GPSLocationService", msg);
+            Intent intent = getIntent();
+            select = intent.getIntExtra("map",0);
+            switch (select){
+                case 1:
+                    if(location.getAccuracy()<1000||count==0){
+                        map.clear();
+                        String msg = "Latitude : "+ latitude.toString() + "\nLongitude:"+ longitude.toString();
+                        Log.i("GPSLocationService", msg);
+
+                        insertToDatabase(latitude.toString(), longitude.toString());
+                        editor.putFloat("latitude",latitude_position);
+                        editor.putFloat("longitude",longitude_position);
+                        editor.commit();
+                        latitude_position = (float)location.getLatitude();
+
+                        LatLng nowPoint = new LatLng(latitude,longitude);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,17));
+                        // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
+                        showCurrentLocation(latitude, longitude);//위치이동
+                        count++;
+                        //editor.putString("ID", ID);
+
+                        LatLng makerPoint = new LatLng(latitude-0.000225f,longitude);
+                        MarkerOptions optFirst = new MarkerOptions();
+                        optFirst.position(makerPoint);// 위도 • 경도
+                        optFirst.icon(BitmapDescriptorFactory.fromResource(
+                                R.mipmap.ic_launcher_round));
+
+                        map.addMarker(optFirst).showInfoWindow();
+                        map.addCircle(new CircleOptions()
+                                .center(nowPoint)
+                                .radius(100)
+                                .strokeColor(Color.parseColor("#88FF4081"))
+                                .fillColor(Color.parseColor("#55ec068d")));
+                    }
+
+                    map.addMarker(new MarkerOptions()
+                            .position(new LatLng(37.4515900, 127.1276563))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+                    ).showInfoWindow();
+                    map.addMarker(new MarkerOptions()
+                            .position(new LatLng(37.3986291, 127.1051303))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+                    ).showInfoWindow();
+                    break;
+                case 2:
+                    if(location.getAccuracy()<1000||count==0){
+                        map.clear();
+                        String msg = "Latitude : "+ latitude.toString() + "\nLongitude:"+ longitude.toString();
+                        Log.i("GPSLocationService", msg);
+                        insertToDatabase(latitude.toString(), longitude.toString());
+
+                        latitude_position = (float)location.getLatitude();
+                        editor.putFloat("latitude",latitude_position);
+                        editor.putFloat("longitude",longitude_position);
+                        editor.commit();
+                        LatLng nowPoint = new LatLng(latitude,longitude);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,17));
+                        // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
+                        showCurrentLocation(latitude, longitude);//위치이동
+                        count++;
+                        //editor.putString("ID", ID);
+
+                        LatLng makerPoint = new LatLng(latitude-0.000225f,longitude);
+                        MarkerOptions optFirst = new MarkerOptions();
+                        optFirst.position(makerPoint);// 위도 • 경도
+                        optFirst.icon(BitmapDescriptorFactory.fromResource(
+                                R.mipmap.ic_launcher_round));
+
+                        map.addMarker(optFirst).showInfoWindow();
 
 
-                insertToDatabase(latitude.toString(), longitude.toString());
-
-
-
-                latitude_position = (float)location.getLatitude();
-                editor_position.putFloat("latitude",latitude_position);
-                editor_position.putFloat("Longitude",longitude_position);
-
-                LatLng nowPoint = new LatLng(latitude,longitude);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(nowPoint,17));
-                // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
-                showCurrentLocation(latitude, longitude);//위치이동
-                count++;
-                //editor.putString("ID", ID);
-
-                LatLng makerPoint = new LatLng(latitude-0.000225f,longitude);
-                MarkerOptions optFirst = new MarkerOptions();
-                optFirst.position(makerPoint);// 위도 • 경도
-                optFirst.icon(BitmapDescriptorFactory.fromResource(
-                        R.mipmap.ic_launcher_round));
-
-                map.addMarker(optFirst).showInfoWindow();
-                map.addCircle(new CircleOptions()
-                        .center(nowPoint)
-                        .radius(100)
-                        .strokeColor(Color.parseColor("#88FF4081"))
-                        .fillColor(Color.parseColor("#55ec068d")));
+                    }
             }
-
-            map.addMarker(new MarkerOptions()
-                    .position(new LatLng(37.4515900, 127.1276563))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-
-            ).showInfoWindow();
-            map.addMarker(new MarkerOptions()
-                    .position(new LatLng(37.3986291, 127.1051303))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-            ).showInfoWindow();
-
         }
 
         public void onProviderDisabled(String provider) {
