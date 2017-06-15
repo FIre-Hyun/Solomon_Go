@@ -37,7 +37,7 @@ public class SolostopActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private GoogleMap map;
 
-    int count=0;
+    int item,select,count=0;
     float latitude_position,longitude_position;
     double d_latitude,d_longitude;
     double latitude_solo,longitude_solo;
@@ -46,7 +46,6 @@ public class SolostopActivity extends AppCompatActivity {
     String id;
     SharedPreferences sp_id;
     SharedPreferences.Editor editor;
-    int select;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +97,7 @@ public class SolostopActivity extends AppCompatActivity {
                 map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-                        Toast.makeText(getApplicationContext(), "마커 클릭 확인용 토스트", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "마커 클릭 확인용 토스트", Toast.LENGTH_LONG).show();
                         return false;
                     }
                 });
