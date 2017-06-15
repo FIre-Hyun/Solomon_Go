@@ -26,6 +26,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String imgUrl = "http://jun123101.cafe24.com/picture/", id;
 
     picture task;
+
+    int item;
 
     Bitmap bmImg;
 
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor = sp_id.edit();
 
         id = sp_id.getString("ID", "");
-
+        item = sp_id.getInt("item",0);
         Log.d("prefer", id);
         task.execute(imgUrl + "picture_" + id + ".png");    // 아이디를 이용해서 서버에서 사진을 받아옴
 
@@ -145,23 +148,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_Main_Profile:
                 intent = new Intent(MainActivity.this, LoginRegisterActivity.class);
                 intent.putExtra("before", "change");
+                startActivity(intent);
                 break;
             case R.id.btn_Main_Solostop:
                 intent = new Intent(MainActivity.this, SolostopActivity.class);
                 intent.putExtra("map",1);
+                startActivity(intent);
                 break;
             case R.id.btn_Main_Setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_Main_Nearsolomon:
                 intent = new Intent(MainActivity.this, NearsolomonActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_Main_Bag:
-                intent = new Intent(MainActivity.this, BagActivity.class);
+                //intent = new Intent(MainActivity.this, BagActivity.class);
+                Log.d("main","1234");
+                Toast.makeText(getApplicationContext(),"현재 보유 솔로포인트는 " + item +" 입니다.", Toast.LENGTH_LONG).show();
                 break;
             case R.id.btn_Main_Recently:
                 intent = new Intent(MainActivity.this, DialogAcitivy.class);//여기서 이미지나 프로필내용을 보내주어야 한다
                 intent.putExtra("before", "recently");
+                startActivity(intent);
                 break;
             case R.id.btn_Main_Logout:
 
@@ -169,9 +179,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editor.commit();
 
                 intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
                 break;
         }
-        startActivity(intent);
 
     }
 
