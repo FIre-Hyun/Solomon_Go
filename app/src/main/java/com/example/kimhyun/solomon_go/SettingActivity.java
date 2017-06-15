@@ -7,9 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -23,7 +23,7 @@ public class SettingActivity extends AppCompatActivity {
 
     CheckBox ckbox_disable;
 
-    Button btn_logout;
+    ImageView btn_logout;
 
     SharedPreferences sp_id;
     SharedPreferences.Editor editor;
@@ -36,7 +36,7 @@ public class SettingActivity extends AppCompatActivity {
 
         ckbox_disable = (CheckBox) findViewById(R.id.ckbox_disable);
 
-        btn_logout = (Button) findViewById(R.id.btn_logout);
+        btn_logout = (ImageView) findViewById(R.id.btn_logout);
 
         sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         editor = sp_id.edit();

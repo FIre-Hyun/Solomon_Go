@@ -84,7 +84,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
         if(intent.getStringExtra("before").toString().equals("change")) {   // 이전에 온 값이 메인화면이면 수정하기 버튼으로 바꿔주고, 회원가입에서 왔으면 회원가입 버튼을 설정
             et_id.setText(auto_login.getString("ID", ""));
-            imageView_picture.setImageResource(R.drawable.app_icon);
+            btn_register.setImageResource(R.drawable.login_register_change_button);
         }
 
 
