@@ -169,17 +169,13 @@ public class NearsolomonActivity extends AppCompatActivity {
                             + URLEncoder.encode(longitude, "UTF-8");
 
 //                    URL url = new URL(serverURL);
-                    Log.d("Test", data);
-
                     URL url = new URL(serverURL);
                     URLConnection conn = url.openConnection();
 
-                    Log.d("Test", "1");
                     conn.setDoOutput(true);
                     OutputStreamWriter wr =
                             new OutputStreamWriter(conn.getOutputStream());
 
-                    Log.d("Test", "2");
                     wr.write(data);
                     wr.flush();
 
@@ -272,6 +268,16 @@ public class NearsolomonActivity extends AppCompatActivity {
     }
     private class GetImage extends AsyncTask<String, Integer, Bitmap> {
 
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(NearsolomonActivity.this,
+                    "Please Wait", null, true, true);
+
+        }
 
         @Override
         protected Bitmap doInBackground(String... urls) {
@@ -296,6 +302,7 @@ public class NearsolomonActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Bitmap img) {
+            progressDialog.dismiss();
         }
 
     }

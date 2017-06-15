@@ -56,21 +56,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btn_Main_Go = (Button)findViewById(R.id.btn_Main_Go);
 
-        auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);   // 프리퍼런스를 생성하고 auto라는 이름을 붙혀준다
         editor = auto_login.edit();
 
 
-        if(auto_login.getBoolean("Auto_Login_enabled", false)){
+        if(auto_login.getBoolean("Auto_Login_enabled", false)){ // auto_login이  가지고있는 "Auto_Login_enable" 항목(자동로그인) 이 false이면 => (자동로그인이 체크돼있으면)
 
             et_id.setText(auto_login.getString("ID", ""));
-            et_password.setText(auto_login.getString("PW", ""));
-            ckbox_autologin.setChecked(true);
+            et_password.setText(auto_login.getString("PW", ""));    //id, password에 auto_login이 가지고 있는 프리퍼런스 값을 넣는다
+            ckbox_autologin.setChecked(true);   //  체크박스도 체크해둔다
 
 
             String id = et_id.getText().toString();
             String password = et_password.getText().toString();
 
-            insertToDatabase(id, password);
+            insertToDatabase(id, password);     // id 체크
 
 
 
@@ -86,18 +86,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
-            case R.id.btn_login:
+            case R.id.btn_login:        //로그인 버튼을 누르면
 
                 String id = et_id.getText().toString();
                 String password = et_password.getText().toString();
 
-                insertToDatabase(id, password);
+                insertToDatabase(id, password);     // id 체크
 
 
                 break;
 
             case R.id.btn_register:
                 intent = new Intent(getApplicationContext(), LoginRegisterActivity.class);
+                intent.putExtra("before", "Login");
                 startActivity(intent);
 
                 break;
@@ -114,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
             @Override
-            protected void onPreExecute() {
+            protected void onPreExecute() {     //생명주기 첫번째,, ProgressDialog 시작하기
                 super.onPreExecute();
 
                 loading = ProgressDialog.show(LoginActivity.this,
@@ -122,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            protected void onPostExecute(String result) {       // 생명주기 세번째,,
                 super.onPostExecute(result);
 
                 loading.dismiss();
@@ -131,9 +132,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     Log.d("Login", result);
 
-                    JSONObject jsonObj = new JSONObject(result);
+                    JSONObject jsonObj = new JSONObject(result);        // login.php에서 json값을 받아온다
 
-                    String name = jsonObj.getJSONArray("result").getJSONObject(0).getString("name");
+                    String name = jsonObj.getJSONArray("result").getJSONObject(0).getString("name");    //result라는 이름의 json값에서 0번째 name 항목을 받아온다.
 
                     if(name != "null"){       //로그인이 성공한다면
 
@@ -141,14 +142,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         String ID = et_id.getText().toString();
 
-                        if(ckbox_autologin.isChecked()){
+                        if(ckbox_autologin.isChecked()){    //자동로그인이 눌려있으면
 
                             String PW = et_password.getText().toString();
 
-                            editor.putString("PW", PW);
+                            editor.putString("PW", PW);     //preference에 password 값과 자동로그인을 넣어둔다
                             editor.putBoolean("Auto_Login_enabled", true);
                         }else{
-                            editor.clear();
+                            editor.clear();     //자동로그인이 안눌려져있으면 자동로그인 정보들을 지운다.
                         }
 
                         Log.d("로그인 pre", ID);
@@ -186,20 +187,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     String data = URLEncoder.encode("id", "UTF-8") + "="
                             + URLEncoder.encode(id, "UTF-8");
                     data += "&" + URLEncoder.encode("password", "UTF-8") + "="
-                            + URLEncoder.encode(password, "UTF-8");
+                            + URLEncoder.encode(password, "UTF-8");     //data에 id값과 password 값을 넣는다.
 
                     Log.d("Login", "Insert Data Complete");
 
                     Log.d("lgdata", data);
                     Log.d("lgid", id);
                     URL url = new URL(link);
-                    URLConnection conn = url.openConnection();
+                    URLConnection conn = url.openConnection();  //서버에 있는 login.php에 연결
 
                     conn.setDoOutput(true);
                     OutputStreamWriter wr =
                             new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write(data);
+                    wr.write(data);     // OutputStreamWriter에 data값을 넣는다.
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(
@@ -210,11 +211,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     // Read Server Response
                     while ((line = reader.readLine()) != null) {
-                        sb.append(line);
+                        sb.append(line);      //php문에 갔다와서 반환되는 값을 받는다
                         break;
                     }
                     Log.d("sbbb", sb.toString());
-                    return sb.toString();
+                    return sb.toString();   //php문에서 반환된 sb값을 return 한다.
                 } catch (Exception e) {
 
                     return new String("Exception: " + e.getMessage());
@@ -225,8 +226,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         InsertData task = new InsertData();
-        task.execute(id, password);
+        task.execute(id, password);     //AsyncTask 실행행
     }
-
 
 }

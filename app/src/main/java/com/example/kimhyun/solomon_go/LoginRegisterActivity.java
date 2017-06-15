@@ -37,9 +37,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
     Button btn_gallery;
 
-    EditText et_id, et_password, et_name, et_hobby, et_type, et_job;   //생년월일 하는거 어떻게하는지 몰라서 아직 안함
+    EditText et_id, et_password, et_name, et_hobby, et_type, et_job;
 
-    Spinner spin_home, spin_year, spin_month, spin_day;
+    Spinner spin_home, spin_year;
 
     ImageView imageView_picture, btn_register;
 
@@ -73,8 +73,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
         spin_home = (Spinner) findViewById(R.id.spinner_home);
         spin_year = (Spinner) findViewById(R.id.spinner_year);
-//        spin_month = (Spinner) findViewById(R.id.spinner_month);
-//        spin_day = (Spinner) findViewById(R.id.spinner_day);
 
         rb_man = (RadioButton) findViewById(R.id.rb_man);
         rb_girl = (RadioButton) findViewById(R.id.rb_girl);
@@ -84,10 +82,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
         intent = getIntent();
 
-        if(intent.getStringExtra("before").toString().equals("change")) {
+        if(intent.getStringExtra("before").toString().equals("change")) {   // 이전에 온 값이 메인화면이면 수정하기 버튼으로 바꿔주고, 회원가입에서 왔으면 회원가입 버튼을 설정
             et_id.setText(auto_login.getString("ID", ""));
             imageView_picture.setImageResource(R.drawable.app_icon);
-            //수정하기로 바꾸기
         }
 
 
@@ -101,21 +98,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item
         );
-//        ArrayAdapter adapter_month = ArrayAdapter.createFromResource(
-//                this, R.array.birth_month, android.R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(
-//                android.R.layout.simple_spinner_dropdown_item
-//        );
-//
-//        ArrayAdapter adapter_day = ArrayAdapter.createFromResource(
-//                this, R.array.birth_day, android.R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(
-//                android.R.layout.simple_spinner_dropdown_item
-//        );
+
         spin_home.setAdapter(adapter);
         spin_year.setAdapter(adapter_year);
-//        spin_month.setAdapter(adapter_month);
-//        spin_day.setAdapter(adapter_day);
 
 
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -128,8 +113,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
                         et_type.getText().toString() != null &&
                         et_job.getText().toString() != null &&
                         (rb_man.isChecked() || rb_girl.isChecked()) &&
-                        imageView_picture.getResources() != null ) {     // 사실 여기 널이아니라 기본값
-                    //모두 만족하면
+                        imageView_picture.getResources() != null ) {     // 값들을 모두 입력햇으면
 
 
                     String id = et_id.getText().toString();
@@ -145,19 +129,20 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     String age = String.valueOf(spin_year.getSelectedItemPosition());
 
                     if (rb_man.isChecked())
-                        sex = "0";
+                        sex = "0";  //남자
                     else
-                        sex = "1";
+                        sex = "1";  //여자
 
-                    insertToDatabase(id, password, name, hobby, type, job, home, sex, age);     //여기까지가 회원가입 정보 db에 insert
+                    insertToDatabase(id, password, name, hobby, type, job, home, sex, age);     //register.php와 연결된 db에 업로드
 
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream(); // 여기부터가 사진 업로드
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream(); // 이미지 업로드를 위한 작업
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
                     byte[] byte_arr = stream.toByteArray();
                     String encodedString = Base64.encodeToString(byte_arr, 0);
 
                     upload("http://jun123101.cafe24.com/ImageUpload.php","POST",getEncoded64ImageStringFromBitmap(imageBitmap), id);
+                                //ImageUpload.php에 사진을 보내기 위한 upload 메소드
 
                     if(intent.getStringExtra("before").toString().equals("change")){
                         Toast.makeText(getApplicationContext(), "프로필 수정이 완료되었습니다. ", Toast.LENGTH_SHORT).show();
@@ -176,35 +161,14 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
         btn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {   //갤러리에서 가져오기 버튼을 누르면 선택에따라 갤러리/포토/네이버 클라우드로 intent한다.
 
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-//                // 잘라내기 셋팅
-//                intent.putExtra("crop", "true");
-//                intent.putExtra("aspectX", 0);
-//                intent.putExtra("aspectY", 0);
-//                intent.putExtra("outputX", 200);
-//                intent.putExtra("outputY", 150);
-//                try {
-//                    intent.putExtra("return-data", true);
-//                    startActivityForResult(Intent.createChooser(intent,
-//                            "Complete action using"), 2);   // PICK FROM GALLERY
-//                } catch (ActivityNotFoundException e) {
-//                    // Do nothing for now
-//                }
-//
-
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
                 Intent intent = new Intent();
-                // Show only images, no videos or anything else
+
                 intent.setType("image/*");
 
                 intent.setAction(Intent.ACTION_PICK);
-                // Always show the chooser (if there are multiple options available)
+
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
 
             }
@@ -220,10 +184,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
             Uri uri = data.getData();
 
             try {
-                imageBitmap= MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
+                imageBitmap= MediaStore.Images.Media.getBitmap(getContentResolver(), uri);      //선택한 이미지를 Bitmap 형태로 받아온다
 
-                imageView_picture.setImageBitmap(imageBitmap);
+                imageView_picture.setImageBitmap(imageBitmap);  //받아온 이미지 설정
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -231,6 +194,8 @@ public class LoginRegisterActivity extends AppCompatActivity {
     }
 
     private void insertToDatabase(String id, String password, String name, String hobby, String type, String job, String home, String sex, String  age) {
+
+                    //db에 회원정보 등록
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
@@ -266,7 +231,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     String sex = (String) params[7];
                     String age = (String) params[8];
 
-                    String link = "http://jun123101.cafe24.com/register.php";
+                    String link = "http://jun123101.cafe24.com/register.php";   // data에 id, password,,,, 값들을 넣는다.
                     String data = URLEncoder.encode("id", "UTF-8") + "="
                             + URLEncoder.encode(id, "UTF-8");
                     data += "&" + URLEncoder.encode("password", "UTF-8") + "="
@@ -287,7 +252,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
                             + URLEncoder.encode(age, "UTF-8");
 
                     URL url = new URL(link);
-                    URLConnection conn = url.openConnection();
+                    URLConnection conn = url.openConnection();      //register.php와 연결
 
                     conn.setDoOutput(true);
                     OutputStreamWriter wr =
@@ -295,6 +260,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
                     wr.write(data);
                     wr.flush();
+
 
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(conn.getInputStream()));
@@ -317,7 +283,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
         }
 
         InsertData task = new InsertData();
-        task.execute(id, password, name, hobby, type, job, home, sex, age);
+        task.execute(id, password, name, hobby, type, job, home, sex, age); // 실행
     }
 
     public String getEncoded64ImageStringFromBitmap(Bitmap bitmap) {
@@ -327,9 +293,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
         String imgString = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
         return imgString;
     }
-    public void upload(String Url, String method, String imageString, String id) {
+    public void upload(String Url, String method, String imageString, String id) {  // 사진 업로드를 위한 메소드
         new AsyncTask<String, String, String>() {
-            String method, imageString;
+            String method;
             int tmp;
             String data="";
 
@@ -356,7 +322,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
                     OutputStream os = httpURLConnection.getOutputStream();
 
-                    String full_data = urlParams + "&" + id;
+                    String full_data = urlParams + "&" + id;    // ImageUpload.php 에 id 값을 보낸다.
 
                     os.write(full_data.getBytes());
                     os.flush();
@@ -382,9 +348,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String msg) {
-//                Toast.makeText(MainActivity.this.getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+
             }
-        }.execute(Url, method, imageString, id);
+        }.execute(Url, method, imageString, id);        //실행
     }
 
 
