@@ -55,7 +55,10 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
     Intent intent;
 
     double latitude,longitude;
+    int point;
 
+    SharedPreferences sp_id;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +79,11 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
         btn_Close.setOnClickListener(this);
 
         task = new picture();
+
+        sp_id = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        editor = sp_id.edit();
+
+        point = sp_id.getInt("item",0);
 
         Intent intent = getIntent();
         if(intent.getStringExtra("before").toString().equals("near")){
@@ -215,10 +223,16 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
         switch (v.getId()){
             case R.id.btn_find:
-                intent = new Intent(getApplicationContext(), SolostopActivity.class);
-                Log.d("Dial-onclick", gps_id);
-                gainGPS(gps_id);        // 상대방 위치와 내 위치를 검색하기위해 gps값을 받아온다
-
+                if(point>0){
+                    intent = new Intent(getApplicationContext(), SolostopActivity.class);
+                    Log.d("Dial-onclick", gps_id);
+                    gainGPS(gps_id);        // 상대방 위치와 내 위치를 검색하기위해 gps값을 받아온다
+                    point--;
+                    Toast.makeText(getApplicationContext(), "솔로포인트를 사용해 위치를 찾습니다", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "솔로포인트가 없어요! ㅠㅠ ", Toast.LENGTH_SHORT).show();
+                }
+                editor.putInt("item",point);
                 break;
             case R.id.btn_Close:
                 finish();
