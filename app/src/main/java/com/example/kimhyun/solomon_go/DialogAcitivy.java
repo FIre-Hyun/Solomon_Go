@@ -45,11 +45,8 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
     Button btn_Close,btn_find;
     ImageView profile_Image;
     TextView profile_Name, profile_Sex, profile_Age, profile_Hobby, profile_Type, profile_Job, profile_Home;
-    Bundle bundel;
 
     String gps_id;
-
-    String mJsonString;
 
     Bitmap bmImg;
 
@@ -78,45 +75,28 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
         btn_find.setOnClickListener(this);
         btn_Close.setOnClickListener(this);
 
-        Log.d("Dial", "111");
-//        profile_Image.setImageBitmap((Bitmap) intent.getParcelableExtra("img"));
-
-
-        //String log = intent.getStringExtra("profile").toString();
-        //Log.d("Dial", log);
-
         task = new picture();
 
         Intent intent = getIntent();
         if(intent.getStringExtra("before").toString().equals("near")){
 
-            Log.d("Dial", "222");
-//            profile_Name.setText(intent.getStringExtra("profile"));
-            Log.d("Dial-lover값 near", "");
-
-            insertToDatabase(intent.getStringExtra("profile").toString());
+            insertToDatabase(intent.getStringExtra("profile").toString());  // 이전 엑티비티가 nearsolomon 이면 클릭한 profile을 db에 넣는다.
         }
         else if(intent.getStringExtra("before").toString().equals("recently")){
-//            profile_Name.setText(~~);
 
-            Log.d("Dial", "333");
             SharedPreferences auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
 
-            String log = auto_login.getString("lover", "");
-            Log.d("Dial-lover값", log);
-
-            insertToDatabase(auto_login.getString("lover", ""));
+            insertToDatabase(auto_login.getString("lover", ""));    // 이전 엑티비티가 recentlyactivity 이면 Preference 에 넣어둔 lover 데이터를 db에 넣는다
         }
         else{
 
-            Log.d("Dial", "333");
             Toast.makeText(getApplicationContext(), "데이터가 없어요 ㅠㅠ", Toast.LENGTH_SHORT).show();
             finish();
         }
 
     }
 
-    private void insertToDatabase(String id) {
+    private void insertToDatabase(String id) {      // id값을 넣고 프로필 리스트 값을 받아온다.
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
@@ -137,9 +117,8 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                 loading.dismiss();
 
                 try {
-                    Log.d("Dial-Json값", result);
 
-                    JSONObject jsonObj = new JSONObject(result);
+                    JSONObject jsonObj = new JSONObject(result);    // json 형식으로 받아온다
 
                     String id = jsonObj.getJSONArray("result").getJSONObject(0).getString("id");
                     String name = jsonObj.getJSONArray("result").getJSONObject(0).getString("name");
@@ -154,7 +133,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
 
                     if(id != "null"){       //로그인이 성공한다면
 
-                        task.execute("http://jun123101.cafe24.com/picture/picture_"+id+".png");
+                        task.execute("http://jun123101.cafe24.com/picture/picture_"+id+".png");     // 서버에서 id값을 통해 이미지파일을 받아온다.
 
                         SharedPreferences auto_login = getSharedPreferences("auto", Activity.MODE_PRIVATE);
                         SharedPreferences.Editor editor = auto_login.edit();
@@ -197,8 +176,6 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                     String data = URLEncoder.encode("id", "UTF-8") + "="
                             + URLEncoder.encode(id, "UTF-8");
 
-                    Log.d("Dialog", "Insert Data Complete");
-
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
 
@@ -206,7 +183,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                     OutputStreamWriter wr =
                             new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write(data);
+                    wr.write(data);     //detail.php에 접속하고, id값을 보낸다.
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(
@@ -240,7 +217,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
             case R.id.btn_find:
                 intent = new Intent(getApplicationContext(), SolostopActivity.class);
                 Log.d("Dial-onclick", gps_id);
-                gainGPS(gps_id);
+                gainGPS(gps_id);        // 상대방 위치와 내 위치를 검색하기위해 gps값을 받아온다
 
                 break;
             case R.id.btn_Close:
@@ -273,12 +250,8 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                     Log.d("Dial-Json값", result);
 
                     JSONObject jsonObj = new JSONObject(result);
-                    //String gps1 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps1");
-                    //String gps2 = jsonObj.getJSONArray("gaingps").getJSONObject(0).getString("gps2");
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@여기있는 gps1, gps2값 쓰면 돼
-                    //latitude_position,longitude_position;
 
-                    latitude = jsonObj.getJSONArray("gaingps").getJSONObject(0).getDouble("gps1");
+                    latitude = jsonObj.getJSONArray("gaingps").getJSONObject(0).getDouble("gps1");      // gaingps을 json형식으로 받아오고 db에서 gps1 값을 출력한다.
                     longitude = jsonObj.getJSONArray("gaingps").getJSONObject(0).getDouble("gps2");
                     intent.putExtra("latitude_solo",latitude);
                     intent.putExtra("longitude_solo",longitude);
@@ -307,7 +280,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                     OutputStreamWriter wr =
                             new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write(data);
+                    wr.write(data);         //gaingps.php 에 id 값을 넣는다.
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(
@@ -336,7 +309,7 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
         task.execute(id);
     }
 
-    private class picture extends AsyncTask<String, Integer, Bitmap> {
+    private class picture extends AsyncTask<String, Integer, Bitmap> {      //사진을 서버에서 받아오기위해 AsyncTask를 돌린다
 
         @Override
         protected Bitmap doInBackground(String... urls) {

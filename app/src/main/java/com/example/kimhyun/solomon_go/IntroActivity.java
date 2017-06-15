@@ -15,7 +15,7 @@ public class IntroActivity extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
-            public void run() {
+            public void run() {     //1.5초 delay 후 main으로 들어가도록 한다.
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();

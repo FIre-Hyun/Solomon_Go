@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onClick"
-                app:srcCompat="@drawable/cast_expanded_controller_seekbar_thumb" />
+                app:srcCompat="@drawable/nearsolomon_reload" />
 
 
         </LinearLayout>
