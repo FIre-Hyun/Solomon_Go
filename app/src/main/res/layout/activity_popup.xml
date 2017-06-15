@@ -23,9 +23,10 @@
 
         <ImageView
             android:id="@+id/profile_Image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/cast_abc_scrubber_control_to_pressed_mtrl_000" />
 
@@ -190,15 +191,30 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_Close"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="뒤로가기"
-            app:srcCompat="@drawable/circle" />
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/btn_find"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="찾기"
+                app:srcCompat="@drawable/circle" />
+
+            <Button
+                android:id="@+id/btn_Close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="뒤로가기"
+                app:srcCompat="@drawable/circle" />
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

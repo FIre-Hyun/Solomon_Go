@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_Main_Solostop:
                 intent = new Intent(MainActivity.this, SolostopActivity.class);
+                intent.putExtra("map",1);
                 break;
             case R.id.btn_Main_Setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
