@@ -68,6 +68,7 @@ public class SettingActivity extends AppCompatActivity {
                 editor.clear();
                 editor.commit();
 
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 Toast.makeText(SettingActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
 

@@ -53,7 +53,6 @@
         <activity android:name=".SolostopActivity" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".NearsolomonActivity" />
-        <activity android:name=".BagActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".LoginRegisterActivity" />
         <activity android:name=".IntroActivity">
