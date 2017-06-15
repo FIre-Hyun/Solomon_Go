@@ -32,12 +32,16 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SolostopActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private GoogleMap map;
 
-    int item,select,count=0;
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    int item,select,day,setdate,solocount,count=0;
     float latitude_position,longitude_position;
     double latitude_solo,longitude_solo;
     LatLng nowPosition, makerPoint;
@@ -59,6 +63,11 @@ public class SolostopActivity extends AppCompatActivity {
         select = intent.getIntExtra("map",0);
         id = sp_id.getString("ID", "");
         item = sp_id.getInt("item",0);
+
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        day = date.getDate();
+        setdate = sp_id.getInt("date",0);
         // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
 
         //구글 맵 객체 참조
@@ -106,11 +115,20 @@ public class SolostopActivity extends AppCompatActivity {
                     public boolean onMarkerClick(Marker marker) {
                         latitude_position = sp_id.getFloat("latitude",30.4512074f);
                         longitude_position = sp_id.getFloat("longitude",127.1277899f);
-                        if(!marker.getPosition().equals(makerPoint)&&(calDistance(latitude_position,longitude_position,marker.getPosition().latitude,marker.getPosition().longitude)<100)){
-                            item = item +1;
-                            editor.putInt("item",item);
-                            editor.commit();
-                            Toast.makeText(getApplicationContext(), "솔로포인트 획득!!", Toast.LENGTH_LONG).show();
+                        if(!marker.getPosition().equals(makerPoint) && select==1 &&
+                            (calDistance(latitude_position,longitude_position,marker.getPosition().latitude,marker.getPosition().longitude)<100
+                            )){
+                            if(setdate!=day){
+                                item = item +1;
+                                editor.putInt("item",item);
+                                editor.commit();
+                                Toast.makeText(getApplicationContext(), "솔로포인트 획득!!", Toast.LENGTH_LONG).show();
+                                editor.putInt("date",day);
+                                setdate=day;
+                            }else{
+                                Toast.makeText(getApplicationContext(), "오늘 획득 가능한 솔로포인트를 모두 획득하셨습니다.", Toast.LENGTH_LONG).show();
+                            }
+
                         }
                         return false;
                     }
@@ -274,18 +292,12 @@ public class SolostopActivity extends AppCompatActivity {
     }// end of GPSListener
 
     private void soloStopMaker(){
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4515900, 127.1276563))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
+
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.3986291, 127.1051303))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
         ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4531256,127.1344274))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
+
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4530575,127.1333331))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
@@ -295,52 +307,18 @@ public class SolostopActivity extends AppCompatActivity {
                 .position(new LatLng(37.4535855,127.1352965))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
         ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4510730,127.1331614))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
+
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4522994,127.1320778))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
         ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4518565,127.1317559))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4520354,127.1306187))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4520354,127.1306187))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4516436,127.1297389))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4512263,127.1294492))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
         ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4515755,127.1280545))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4506812,127.1288699))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4509708,127.1277219))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4507152,127.1271747))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
+
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4513285,127.1271962))
@@ -350,43 +328,12 @@ public class SolostopActivity extends AppCompatActivity {
                 .position(new LatLng(37.4518821,127.1271533))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
         ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4500764,127.1272713))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4498635,127.1281081))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4495483,127.1296102))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4491736,127.1286768))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4495909,127.1271640))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
         ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4492417,127.1272928))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4537899,127.1318096))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4536877,127.1331722))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4531852,127.1325928))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
-        ).showInfoWindow();
+
     }
 
     public double calDistance(double lat1, double lon1, double lat2, double lon2){
