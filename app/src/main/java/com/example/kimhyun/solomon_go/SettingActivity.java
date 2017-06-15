@@ -77,7 +77,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
 
-    private void deleteGPS(String id) {
+    private void deleteGPS(String id) {             // 비활성화를 누르면 gps값을 db에서 지움으로써 상대방이 검색하지 못하게 한다
 
         class InsertData extends AsyncTask<String, Void, String> {
 

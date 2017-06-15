@@ -214,7 +214,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
                 super.onPostExecute(s);
 
                 loading.dismiss();
-                //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
 
             @Override
