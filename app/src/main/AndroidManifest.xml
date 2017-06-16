@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kimhyun.solomon_go">
+    package="com.gachon.kimhyun.solomon_go">
 
     <!-- 구글맵 API v2의 권한 설정(설정한 permission을 사용하겠다고 설정) -->
-    <permission android:name="com.example.kimhyun.solomon_go.permission.MAPS_RECEIVE"
+    <permission android:name="com.gachon.kimhyun.solomon_go.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.example.kimhyun.solomon_go.permission.MAPS_RECEIVE" />
 
@@ -49,13 +49,13 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".SolostopActivity" />
-        <activity android:name=".SettingActivity" />
-        <activity android:name=".NearsolomonActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".LoginRegisterActivity" />
-        <activity android:name=".IntroActivity">
+        <activity android:name="com.gachon.kimhyun.solomon_go.MainActivity"/>
+        <activity android:name="com.gachon.kimhyun.solomon_go.SolostopActivity" />
+        <activity android:name="com.gachon.kimhyun.solomon_go.SettingActivity" />
+        <activity android:name="com.gachon.kimhyun.solomon_go.NearsolomonActivity" />
+        <activity android:name="com.gachon.kimhyun.solomon_go.LoginActivity" />
+        <activity android:name="com.gachon.kimhyun.solomon_go.LoginRegisterActivity" />
+        <activity android:name="com.gachon.kimhyun.solomon_go.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -63,7 +63,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DialogAcitivy"
+            android:name="com.gachon.kimhyun.solomon_go.DialogAcitivy"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
     </application>
 

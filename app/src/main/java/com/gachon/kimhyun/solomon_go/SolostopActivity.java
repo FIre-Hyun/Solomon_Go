@@ -1,4 +1,4 @@
-package com.example.kimhyun.solomon_go;
+package com.gachon.kimhyun.solomon_go;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,7 +32,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

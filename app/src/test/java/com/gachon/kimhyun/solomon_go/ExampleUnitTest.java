@@ -1,4 +1,4 @@
-package com.example.kimhyun.solomon_go;
+package com.gachon.kimhyun.solomon_go;
 
 import org.junit.Test;
 

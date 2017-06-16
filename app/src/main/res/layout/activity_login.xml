@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
     android:gravity="center_horizontal"
-    tools:context="com.example.kimhyun.solomon_go.LoginActivity">
+    tools:context="com.gachon.kimhyun.solomon_go.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar

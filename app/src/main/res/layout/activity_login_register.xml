@@ -6,7 +6,7 @@
     android:layout_height="600dp"
     android:background="@drawable/login_register_background"
     android:orientation="vertical"
-    tools:context="com.example.kimhyun.solomon_go.LoginRegisterActivity">
+    tools:context="com.gachon.kimhyun.solomon_go.LoginRegisterActivity">
 
 
     <LinearLayout

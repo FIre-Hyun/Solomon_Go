@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
-    tools:context="com.example.kimhyun.solomon_go.MainActivity">
+    tools:context="com.gachon.kimhyun.solomon_go.MainActivity">
 
     <ImageView
         android:id="@+id/btn_Main_Setting"
