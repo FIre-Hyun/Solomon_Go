@@ -32,7 +32,9 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class SolostopActivity extends AppCompatActivity {
@@ -41,11 +43,11 @@ public class SolostopActivity extends AppCompatActivity {
 
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-    int item,select,day,setdate,solocount,flag,count=0;
+    int item,select,day,setdate,solocount,flag,time,count=0;
     float latitude_position,longitude_position;
     double latitude_solo,longitude_solo;
+    long nowTiem;
     LatLng nowPosition, makerPoint;
-    LatLng[] check = new LatLng[3];
 
     Intent intent;
     String id;
@@ -70,15 +72,13 @@ public class SolostopActivity extends AppCompatActivity {
         Date date = new Date(now);
         day = date.getDate();
         setdate = sp_id.getInt("date",0);
-
-
+        time = sp_id.getInt("time",0);
 
         // 현재 위치의 지도를 보여주기 위해 정의한 메소드 호출
         //구글 맵 객체 참조
         fragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "GoogleMap is ready.");
                 map = googleMap;
 
                 latitude_position = sp_id.getFloat("latitude",30.4512074f);
@@ -123,16 +123,19 @@ public class SolostopActivity extends AppCompatActivity {
                             )){
                             flag = 0;
                             if(solocount < 3){
-                                for(int checkcount = 0; checkcount<3; checkcount++){
-                                    //뭐지
+                                if(gabTime(time)<5||gabTime(time)==0){
+                                    Toast.makeText(getApplicationContext(), "쿨타임 " + (5-gabTime(time)) + "분 남았습니다.", Toast.LENGTH_LONG).show();
+                                }else{
+                                    item = item +1;
+                                    solocount = solocount +1;
+                                    editor.putInt("item",item);
+                                    editor.putInt("date",day);
+                                    editor.putInt("num",solocount);
+                                    editor.putInt("time",(int)nowTiem);
+                                    time = (int)nowTiem;
+                                    editor.commit();
+                                    Toast.makeText(getApplicationContext(), "솔로포인트 획득!!", Toast.LENGTH_LONG).show();
                                 }
-                                item = item +1;
-                                solocount = solocount +1;
-                                editor.putInt("item",item);
-                                editor.putInt("date",day);
-                                editor.putInt("num",solocount);
-                                Toast.makeText(getApplicationContext(), "솔로포인트 획득!!", Toast.LENGTH_LONG).show();
-                                editor.commit();
                             }else{
                                 Toast.makeText(getApplicationContext(), "오늘 획득 가능한 솔로포인트를 모두 획득하셨습니다.", Toast.LENGTH_LONG).show();
                             }
@@ -146,8 +149,6 @@ public class SolostopActivity extends AppCompatActivity {
                 map.getUiSettings().setMapToolbarEnabled(false);
             }
         });//end of fragment.getMapAsync
-
-
 
         // 일부 초기버전 단말의 문제로 인해 초기화 코드 추가
         try {
@@ -302,48 +303,66 @@ public class SolostopActivity extends AppCompatActivity {
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.3986291, 127.1051303))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4530575,127.1333331))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4535855,127.1352965))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4522994,127.1320778))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4512263,127.1294492))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
 
 
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4513285,127.1271962))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4518821,127.1271533))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(37.4495909,127.1271640))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker1))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
-
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(37.4928814,126.9794923))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+        ).showInfoWindow();
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(37.4926302,126.9784087))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+        ).showInfoWindow();
     }
 
-    public double calDistance(double lat1, double lon1, double lat2, double lon2){
+    public int gabTime(int setTime){//시간 계산 함수
+        Calendar cal = Calendar.getInstance();
+        Date endDate = cal.getTime();
+        nowTiem = endDate.getTime();
+        int time1 = (int)nowTiem;
+        int mills = time1-setTime;
+        int min = mills/60000;
+
+        return min;
+    }
+
+    public double calDistance(double lat1, double lon1, double lat2, double lon2){//거리계산 함수
 
         double theta, dist;
         theta = lon1 - lon2;
