@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     picture task;
 
-    int item;
+    int item,day,setdate;
 
     Bitmap bmImg;
 
@@ -71,7 +72,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_Main_Recently.setOnClickListener(this);
         btn_Main_Logout.setOnClickListener(this);
 
-
+        //하루에 3개까지 솔로포인트를 얻을 수 있도록 설정
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        day = date.getDate();
+        setdate = sp_id.getInt("date",0);
+        if(setdate!=day){
+            setdate=day;
+            editor.putInt("date",day);
+            editor.putInt("num",0);
+            editor.commit();
+            Toast.makeText(getApplicationContext(), "오늘 첫 로그인!!\n솔로포인트를 하루 3개까지 얻을 수 있습니다!", Toast.LENGTH_LONG).show();
+        }
 
         checkDangerousPermissions();
 

@@ -228,11 +228,13 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                     Log.d("Dial-onclick", gps_id);
                     gainGPS(gps_id);        // 상대방 위치와 내 위치를 검색하기위해 gps값을 받아온다
                     point--;
+                    editor.putInt("item",point);
+                    editor.commit();
+
                     Toast.makeText(getApplicationContext(), "솔로포인트를 사용해 위치를 찾습니다", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(), "솔로포인트가 없어요! ㅠㅠ ", Toast.LENGTH_SHORT).show();
                 }
-                editor.putInt("item",point);
                 break;
             case R.id.btn_Close:
                 finish();
