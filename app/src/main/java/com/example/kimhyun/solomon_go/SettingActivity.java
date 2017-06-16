@@ -68,11 +68,14 @@ public class SettingActivity extends AppCompatActivity {
                 editor.clear();
                 editor.commit();
 
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
 
                 Toast.makeText(SettingActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
 
                 startActivity(intent);
+
+                finish();
+
             }
         });
     }
