@@ -124,7 +124,7 @@ public class SolostopActivity extends AppCompatActivity {
                             flag = 0;
                             if(solocount < 3){
                                 for(int checkcount = 0; checkcount<3; checkcount++){
-
+                                    //뭐지
                                 }
                                 item = item +1;
                                 solocount = solocount +1;
