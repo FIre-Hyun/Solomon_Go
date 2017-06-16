@@ -121,8 +121,17 @@ public class SolostopActivity extends AppCompatActivity {
                         if(!marker.getPosition().equals(makerPoint) && select==1 &&
                             (calDistance(latitude_position,longitude_position,marker.getPosition().latitude,marker.getPosition().longitude)<100
                             )){
-                            flag = 0;
-                            if(solocount < 3){
+                            if(gabTime(time)<0){
+                                item = item +1;
+                                solocount = solocount +1;
+                                editor.putInt("item",item);
+                                editor.putInt("date",day);
+                                editor.putInt("num",solocount);
+                                editor.putInt("time",(int)nowTiem);
+                                time = (int)nowTiem;
+                                editor.commit();
+                                Toast.makeText(getApplicationContext(), "솔로포인트 획득!!", Toast.LENGTH_LONG).show();
+                            }else if(solocount < 3){
                                 if(gabTime(time)<5||gabTime(time)==0){
                                     Toast.makeText(getApplicationContext(), "쿨타임 " + (5-gabTime(time)) + "분 남았습니다.", Toast.LENGTH_LONG).show();
                                 }else{
@@ -139,8 +148,6 @@ public class SolostopActivity extends AppCompatActivity {
                             }else{
                                 Toast.makeText(getApplicationContext(), "오늘 획득 가능한 솔로포인트를 모두 획득하셨습니다.", Toast.LENGTH_LONG).show();
                             }
-
-
                         }
                         return false;
                     }
