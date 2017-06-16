@@ -106,7 +106,7 @@ public class SolostopActivity extends AppCompatActivity {
                         longitude_solo = intent.getDoubleExtra("longitude_solo",0);
                         map.addMarker(new MarkerOptions()
                                 .position(new LatLng(latitude_solo, longitude_solo))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.solo_location))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.maker3))
                         ).showInfoWindow();
                         //map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude_solo,longitude_solo),17));
                         break;
