@@ -135,11 +135,13 @@ public class NearsolomonActivity extends AppCompatActivity {
             protected void onPostExecute(String result) {
                 super.onPostExecute(result);
 
-                progressDialog.dismiss();
                 Log.d(TAG, "response  - " + result);
 
                 mJsonString = result;
                 showResult();
+                
+                progressDialog.dismiss();
+
             }
 
 

@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             } catch (IOException e) {
-                Toast.makeText(MainActivity.this, "사진을 못불러오겟어요 ㅠㅠ \n다른사진으로 회원가입 해주시면 안되요?", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "사진을 못불러오겟어요 ㅠㅠ \n다른사진으로 회원가입 해주시면 안돼요?", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
             return bmImg;
