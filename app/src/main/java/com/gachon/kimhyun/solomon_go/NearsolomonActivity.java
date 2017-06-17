@@ -139,7 +139,7 @@ public class NearsolomonActivity extends AppCompatActivity {
 
                 mJsonString = result;
                 showResult();
-                
+
                 progressDialog.dismiss();
 
             }

@@ -122,7 +122,6 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
             protected void onPostExecute(String result) {
                 super.onPostExecute(result);
 
-                loading.dismiss();
 
                 try {
 
@@ -171,6 +170,11 @@ public class DialogAcitivy extends Activity implements View.OnClickListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+
+                loading.dismiss();
+
+
 
             }
 

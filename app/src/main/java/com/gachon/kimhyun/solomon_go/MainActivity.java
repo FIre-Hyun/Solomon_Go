@@ -2,6 +2,7 @@ package com.gachon.kimhyun.solomon_go;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -198,6 +199,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private class picture extends AsyncTask<String, Integer, Bitmap> {
 
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(MainActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
         @Override
         protected Bitmap doInBackground(String... urls) {   //서버에서 이미지를 id에 맞는 이미지를 불러옴
             // TODO Auto-generated method stub
@@ -225,6 +236,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         protected void onPostExecute(Bitmap img) {
             btn_Main_Profile.setImageBitmap(getRoundedBitmap(bmImg));
+            progressDialog.dismiss();
+
         }
 
     }
