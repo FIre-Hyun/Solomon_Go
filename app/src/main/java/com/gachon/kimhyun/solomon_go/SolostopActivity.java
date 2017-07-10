@@ -99,7 +99,8 @@ public class SolostopActivity extends AppCompatActivity {
                                 .radius(100)
                                 .strokeColor(Color.parseColor("#88FF4081"))
                                 .fillColor(Color.parseColor("#55ec068d")));
-                        soloStopMaker();
+                        //soloStopMaker();
+                        testMaker(latitude_position,longitude_position);
                         break;
                     case 2:
                         latitude_solo = intent.getDoubleExtra("latitude_solo",0);
@@ -115,6 +116,7 @@ public class SolostopActivity extends AppCompatActivity {
                 map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
+
                         latitude_position = sp_id.getFloat("latitude",30.4512074f);
                         longitude_position = sp_id.getFloat("longitude",127.1277899f);
                         if(!marker.getPosition().equals(makerPoint) && select==1 &&
@@ -147,6 +149,7 @@ public class SolostopActivity extends AppCompatActivity {
                             }else{
                                 Toast.makeText(getApplicationContext(), "오늘 획득 가능한 솔로포인트를 모두 획득하셨습니다.", Toast.LENGTH_LONG).show();
                             }
+
                         }
                         return false;
                     }
@@ -257,7 +260,8 @@ public class SolostopActivity extends AppCompatActivity {
                                 .radius(100)
                                 .strokeColor(Color.parseColor("#88FF4081"))
                                 .fillColor(Color.parseColor("#55ec068d")));
-                        soloStopMaker();
+                        //soloStopMaker();
+                        testMaker(latitude_position,longitude_position);
                     }
 
 
@@ -304,7 +308,7 @@ public class SolostopActivity extends AppCompatActivity {
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }// end of GPSListener
-
+/*
     private void soloStopMaker(){
 
         map.addMarker(new MarkerOptions()
@@ -355,6 +359,25 @@ public class SolostopActivity extends AppCompatActivity {
                 .position(new LatLng(37.4926302,126.9784087))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
         ).showInfoWindow();
+    }
+*/
+    private void testMaker(double latitude, double longitude){
+        for(double i1 = 33.1; i1 < 38.6; i1 = i1 + 0.05){
+            if((latitude>i1)&&(latitude<(i1+0.05))){
+                for(double j1 = 125.6; j1 < 130.3; j1 = j1 + 0.05){
+                    if((longitude>j1)&&(longitude<(j1+0.05))){
+                        for(double i2 = i1 ; i2 < (i1+0.05) ; i2 = i2 + 0.003){
+                            for(double j2 = j1; j2 < (j1+0.05); j2 = j2 + 0.003){
+                                map.addMarker(new MarkerOptions()
+                                        .position(new LatLng(i2, j2))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+                                ).showInfoWindow();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public int gabTime(int setTime){//시간 계산 함수
