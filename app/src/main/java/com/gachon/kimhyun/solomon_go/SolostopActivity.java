@@ -371,7 +371,7 @@ public class SolostopActivity extends AppCompatActivity {
                                 map.addMarker(new MarkerOptions()
                                         .position(new LatLng(i2, j2))
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-                                ).showInfoWindow();
+                                ).showInfoWindow();//
                             }
                         }
                     }
