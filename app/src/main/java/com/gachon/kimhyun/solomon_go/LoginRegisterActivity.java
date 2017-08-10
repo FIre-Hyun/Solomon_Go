@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,7 +46,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
     RadioButton rb_man, rb_girl;
 
-    Bitmap imageBitmap;
+    Bitmap imageBitmap = null;
 
     private int PICK_IMAGE_REQUEST = 1;
 
@@ -113,8 +114,12 @@ public class LoginRegisterActivity extends AppCompatActivity {
                         et_type.getText().toString() != null &&
                         et_job.getText().toString() != null &&
                         (rb_man.isChecked() || rb_girl.isChecked()) &&
-                        imageView_picture.getResources() != null ) {     // 값들을 모두 입력햇으면
+                        imageBitmap != null ) {     // 값들을 모두 입력햇으면
 
+                    ProgressDialog loading = ProgressDialog.show(LoginRegisterActivity.this,
+                            "Please Wait", null, true, true);
+
+                    Log.d("이미지", String.valueOf(imageView_picture.getResources()));
 
                     String id = et_id.getText().toString();
                     String password = et_password.getText().toString();
@@ -133,7 +138,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     else
                         sex = "1";  //여자
 
-                    insertToDatabase(id, password, name, hobby, type, job, home, sex, age);     //register.php와 연결된 db에 업로드
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream(); // 이미지 업로드를 위한 작업
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -142,7 +146,10 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     String encodedString = Base64.encodeToString(byte_arr, 0);
 
                     upload("http://jun123101.cafe24.com/ImageUpload.php","POST",getEncoded64ImageStringFromBitmap(imageBitmap), id);
-                                //ImageUpload.php에 사진을 보내기 위한 upload 메소드
+                    //ImageUpload.php에 사진을 보내기 위한 upload 메소드
+
+
+                    insertToDatabase(id, password, name, hobby, type, job, home, sex, age);     //register.php와 연결된 db에 업로드
 
                     if(intent.getStringExtra("before").toString().equals("change")){
                         Toast.makeText(getApplicationContext(), "프로필 수정이 완료되었습니다. ", Toast.LENGTH_SHORT).show();
@@ -150,6 +157,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     else{
                         Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     }
+
+                    loading.dismiss();
+
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -198,22 +208,18 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     //db에 회원정보 등록
 
         class InsertData extends AsyncTask<String, Void, String> {
-            ProgressDialog loading;
 
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
 
-                loading = ProgressDialog.show(LoginRegisterActivity.this,
-                        "Please Wait", null, true, true);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
 
-                loading.dismiss();
             }
 
             @Override

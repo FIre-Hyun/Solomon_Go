@@ -120,8 +120,8 @@ public class SolostopActivity extends AppCompatActivity {
                         latitude_position = sp_id.getFloat("latitude",30.4512074f);
                         longitude_position = sp_id.getFloat("longitude",127.1277899f);
                         if(!marker.getPosition().equals(makerPoint) && select==1 &&
-                            (calDistance(latitude_position,longitude_position,marker.getPosition().latitude,marker.getPosition().longitude)<100
-                            )){
+                                (calDistance(latitude_position,longitude_position,marker.getPosition().latitude,marker.getPosition().longitude)<100
+                                )){
                             if(gabTime(time)<0){
                                 item = item +1;
                                 solocount = solocount +1;
@@ -308,59 +308,59 @@ public class SolostopActivity extends AppCompatActivity {
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }// end of GPSListener
-/*
-    private void soloStopMaker(){
+    /*
+        private void soloStopMaker(){
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.3986291, 127.1051303))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.3986291, 127.1051303))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4530575,127.1333331))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4530575,127.1333331))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4535855,127.1352965))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4535855,127.1352965))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4522994,127.1320778))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4522994,127.1320778))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4512263,127.1294492))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4512263,127.1294492))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
 
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4513285,127.1271962))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4518821,127.1271533))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4513285,127.1271962))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4518821,127.1271533))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4495909,127.1271640))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4928814,126.9794923))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(37.4926302,126.9784087))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-        ).showInfoWindow();
-    }
-*/
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4495909,127.1271640))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4928814,126.9794923))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(37.4926302,126.9784087))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
+            ).showInfoWindow();
+        }
+    */
     private void testMaker(double latitude, double longitude){
         for(double i1 = 33.1; i1 < 38.6; i1 = i1 + 0.05){
             if((latitude>i1)&&(latitude<(i1+0.05))){
@@ -371,7 +371,7 @@ public class SolostopActivity extends AppCompatActivity {
                                 map.addMarker(new MarkerOptions()
                                         .position(new LatLng(i2, j2))
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_marker2))
-                                ).showInfoWindow();
+                                ).showInfoWindow();//
                             }
                         }
                     }
