@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -192,15 +194,50 @@ public class LoginRegisterActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
+            Uri selPhotoUri;
 
             try {
                 imageBitmap= MediaStore.Images.Media.getBitmap(getContentResolver(), uri);      //선택한 이미지를 Bitmap 형태로 받아온다
 
-                imageView_picture.setImageBitmap(imageBitmap);  //받아온 이미지 설정
+
+                String name_Str = getImageNameToUri(data.getData());
+                selPhotoUri = data.getData();
+                //절대경로 획득**
+                Cursor c = getContentResolver().query(Uri.parse(selPhotoUri.toString()), null, null, null, null);
+                c.moveToNext();
+                String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
+
+
+                int height = imageBitmap.getHeight();
+                int width = imageBitmap.getWidth();
+
+                Log.d("imageBitmap_Size", (height * width * 4)/1024 + "kbyte");
+
+                Bitmap src = BitmapFactory.decodeFile( absolutePath);
+                Bitmap resized = Bitmap.createScaledBitmap( src, width/8, height/8, true );
+
+
+                Log.d("resized_Size", (height * width * 4)/1024 + "kbyte");
+
+                imageView_picture.setImageBitmap(resized);  //받아온 이미지 설정
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String getImageNameToUri(Uri data)
+    {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(data, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        cursor.moveToFirst();
+
+        String imgPath = cursor.getString(column_index);
+        String imgName = imgPath.substring(imgPath.lastIndexOf("/") + 1);
+
+        return imgName;
     }
 
     private void insertToDatabase(String id, String password, String name, String hobby, String type, String job, String home, String sex, String  age) {
@@ -317,6 +354,8 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     String id = URLEncoder.encode("id", "UTF-8") + "="
                             + URLEncoder.encode(id_data, "UTF-8");
 
+                    Log.d("id_data", id_data);
+
                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
                     httpURLConnection.setDoOutput(true);
@@ -329,9 +368,14 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
                     String full_data = urlParams + "&" + id;    // ImageUpload.php 에 id 값을 보낸다.
 
+                    Log.d("imaga_fullname", full_data);
+
+                    Log.d("id", id);
+
                     os.write(full_data.getBytes());
                     os.flush();
                     os.close();
+
 
                     InputStream is = httpURLConnection.getInputStream();
                     while((tmp=is.read())!=-1){
