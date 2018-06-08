@@ -32,6 +32,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     int item,day,setdate;
 
-    Bitmap bmImg;
+    Bitmap bmImg, bmImg2;
 
     SharedPreferences sp_id;
     SharedPreferences.Editor editor;
@@ -95,7 +96,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         id = sp_id.getString("ID", "");
         Log.d("prefer", id);
-        task.execute(imgUrl + "picture_" + id + ".png");    // 아이디를 이용해서 서버에서 사진을 받아옴
+        try{
+            task.execute(imgUrl + "picture_" + id + ".png");    // 아이디를 이용해서 서버에서 사진을 받아옴
+        }
+        catch (Exception e){
+            task.execute(imgUrl + "picture_dummy.png");    // 아이디를 이용해서 서버에서 사진을 받아옴)
+
+        }
 
     }
 
@@ -205,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPreExecute() {
             super.onPreExecute();
 
+
             progressDialog = ProgressDialog.show(MainActivity.this,
                     "Please Wait", null, true, true);
         }
@@ -227,14 +235,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 bmImg = BitmapFactory.decodeStream(is);
 
 
-            } catch (IOException e) {
-                Toast.makeText(MainActivity.this, "사진을 못불러오겟어요 ㅠㅠ \n다른사진으로 회원가입 해주시면 안돼요?", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+
+                Log.d("Main", "1111");
                 e.printStackTrace();
+
+                URL myFileUrl = null;
+                try {
+                    myFileUrl = new URL("http://jun123101.cafe24.com/picture/picture_dummy.png");
+
+                    Log.d("Main", "들어옴");
+                    HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream();
+
+                    bmImg2 = BitmapFactory.decodeStream(is);
+
+                } catch (MalformedURLException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+                return bmImg2;
             }
             return bmImg;
         }
 
         protected void onPostExecute(Bitmap img) {
+
+            Log.d("Main", "2222");
             btn_Main_Profile.setImageBitmap(getRoundedBitmap(bmImg));
             progressDialog.dismiss();
 
